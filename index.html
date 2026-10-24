@@ -831,6 +831,12 @@
       -webkit-overflow-scrolling: touch;
       white-space: nowrap;
       gap: 4px;
+      scrollbar-width: thin;
+    }
+
+    .profile-tabs-header .btn {
+      flex-shrink: 0;
+      white-space: nowrap;
     }
 
     .profile-tab-pane {
@@ -1094,18 +1100,288 @@
       background: #F8F9FA;
     }
 
+    /* Professional Clinical Invoice, Receipt & Summary Print Styles */
+    .clinical-invoice-doc, .clinical-summary-doc {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1E293B;
+      background: #fff;
+      line-height: 1.5;
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+    .cinv-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 16px;
+      border-bottom: 2.5px solid var(--primary);
+      margin-bottom: 16px;
+      gap: 16px;
+    }
+    .cinv-brand-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .cinv-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+    .cinv-clinic-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+    .cinv-clinic-subtitle {
+      font-size: 11px;
+      color: var(--primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-top: 2px;
+    }
+    .cinv-clinic-contact {
+      font-size: 11.5px;
+      color: #475569;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .cinv-doc-info {
+      text-align: right;
+      min-width: 220px;
+    }
+    .cinv-badge-title {
+      display: inline-block;
+      background: #FFF2EB;
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid #FFD6BA;
+      margin-bottom: 6px;
+    }
+    .cinv-meta-table {
+      font-size: 12px;
+      color: #334155;
+      margin-left: auto;
+    }
+    .cinv-meta-table td {
+      padding: 2px 4px;
+    }
+    .cinv-patient-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+      font-size: 12.5px;
+    }
+    .cinv-grid-col {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .cinv-field-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #64748B;
+      letter-spacing: 0.5px;
+    }
+    .cinv-field-val {
+      font-weight: 600;
+      color: #0F172A;
+    }
+    .cinv-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+      font-size: 12.5px;
+    }
+    .cinv-table th {
+      background: #F1F5F9;
+      color: #334155;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px 12px;
+      border-top: 1px solid #CBD5E1;
+      border-bottom: 2px solid #CBD5E1;
+      text-align: left;
+    }
+    .cinv-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #E2E8F0;
+      color: #1E293B;
+      vertical-align: top;
+    }
+    .cinv-summary-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 18px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .cinv-notes-col {
+      flex: 1;
+      min-width: 250px;
+    }
+    .cinv-words-box {
+      background: #F8FAFC;
+      border: 1px dashed #CBD5E1;
+      border-radius: 6px;
+      padding: 7px 11px;
+      font-size: 11.5px;
+      color: #334155;
+      margin-bottom: 10px;
+    }
+    .cinv-totals-box {
+      width: 270px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12.5px;
+    }
+    .cinv-total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    .cinv-grand-row {
+      display: flex;
+      justify-content: space-between;
+      border-top: 2px solid #CBD5E1;
+      padding-top: 7px;
+      margin-top: 7px;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .cinv-balance-row {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px dashed #CBD5E1;
+      padding-top: 5px;
+      margin-top: 5px;
+      font-weight: 700;
+      font-size: 13.5px;
+    }
+    .cinv-stamp-seal {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border: 2px solid #10B981;
+      border-radius: 6px;
+      color: #047857;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      background: #ECFDF5;
+    }
+    .cinv-signatory-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 28px;
+      padding-top: 12px;
+      border-top: 1px solid #E2E8F0;
+      page-break-inside: avoid;
+    }
+    .cinv-sign-block {
+      text-align: center;
+      min-width: 170px;
+    }
+    .cinv-sign-line {
+      border-top: 1.5px solid #64748B;
+      margin-bottom: 6px;
+    }
+    .cinv-sign-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #334155;
+    }
+    .cinv-sign-sub {
+      font-size: 9.5px;
+      color: #64748B;
+    }
+    .cinv-upi-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #FAFBFD;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      padding: 7px 11px;
+      margin-top: 8px;
+      font-size: 11px;
+    }
+
+    /* Thermal Mode Styles (80mm) */
+    .clinical-thermal-slip {
+      max-width: 78mm;
+      margin: 0 auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 11.5px;
+      color: #000;
+      line-height: 1.35;
+      padding: 6px 4px;
+      background: #fff;
+    }
+    .thermal-divider {
+      border-top: 1px dashed #475569;
+      margin: 6px 0;
+    }
+    .thermal-title {
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .thermal-center {
+      text-align: center;
+    }
+    .thermal-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
     /* Print View */
     @media print {
+      @page {
+        size: A4 portrait;
+        margin: 10mm 12mm 10mm 12mm;
+      }
       body {
         background: #fff !important;
         color: #000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
       }
-      .sidebar, .top-header, .btn, .toolbar, .toast-container, .modal-backdrop:not(#invoicePrintModal):not(#patientPrintModal) {
+      .sidebar, .top-header, .btn, .toolbar, .toast-container, .mobile-bottom-nav, .mobile-fab-wrap, .sidebar-overlay,
+      .modal-backdrop:not(#invoicePrintModal):not(#patientPrintModal),
+      .no-print {
         display: none !important;
       }
       .main-wrapper {
         margin: 0 !important;
         padding: 0 !important;
+        width: 100% !important;
       }
       .content-area {
         padding: 0 !important;
@@ -1115,16 +1391,74 @@
         display: block !important;
         background: #fff !important;
         padding: 0 !important;
+        overflow: visible !important;
+        inset: auto !important;
       }
       #invoicePrintModal .modal-window, #patientPrintModal .modal-window {
         box-shadow: none !important;
         border: none !important;
         max-width: 100% !important;
+        width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
       #invoicePrintModal .modal-header, #invoicePrintModal .modal-footer,
       #patientPrintModal .modal-header, #patientPrintModal .modal-footer {
         display: none !important;
       }
+      #invoicePrintModal .modal-body, #patientPrintModal .modal-body {
+        padding: 0 !important;
+        overflow: visible !important;
+        max-height: none !important;
+      }
+      .cinv-signatory-wrap, .print-avoid-break {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+    }
+
+    /* Mobile Overlay & Navigation Elements */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 95;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+    }
+    .sidebar-overlay.show {
+      display: block;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-sidebar-close {
+      display: none;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      width: 32px;
+      height: 32px;
+      margin-left: auto;
+      font-size: 18px;
+      color: var(--text-secondary);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .mobile-bottom-nav {
+      display: none;
+    }
+
+    .mobile-fab-wrap {
+      display: none;
     }
 
     /* Responsive */
@@ -1138,29 +1472,413 @@
     }
 
     @media (max-width: 768px) {
+      body {
+        padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)); /* space for mobile bottom nav */
+      }
+      body.modal-open .mobile-fab-wrap,
+      body:has(.modal-backdrop.show) .mobile-fab-wrap {
+        display: none !important;
+      }
       .sidebar {
         transform: translateX(-100%);
+        z-index: 110;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
       }
       .sidebar.open {
         transform: translateX(0);
       }
+      .mobile-sidebar-close {
+        display: flex;
+      }
       .main-wrapper {
         margin-left: 0;
+        width: 100%;
+        min-width: 0;
       }
       .menu-toggle {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text-main);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
       }
       .grid-4, .grid-3, .grid-2 {
         grid-template-columns: 1fr;
       }
-      .top-header {
-        padding: 0 16px;
+      .form-row {
+        grid-template-columns: 1fr;
       }
-      .content-area {
-        padding: 16px;
+      .top-header {
+        height: 60px;
+        padding: 0 12px;
+        gap: 8px;
+      }
+      .header-left {
+        flex: 1;
+        min-width: 0;
+        gap: 8px;
+      }
+      .page-heading {
+        font-size: 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: none;
+        flex: 1;
+        min-width: 0;
       }
       .header-center {
         display: none;
+      }
+      .header-actions {
+        display: none; /* replaced by thumb-friendly mobile FAB */
+      }
+      #liveDatePill {
+        display: none;
+      }
+      .header-right {
+        flex-shrink: 0;
+        gap: 6px;
+      }
+      #firebaseSyncPill {
+        padding: 5px 8px;
+        font-size: 11px;
+        gap: 5px;
+        flex-shrink: 0;
+        max-width: 145px;
+      }
+      #firebaseStatusText {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+        max-width: 120px;
+        vertical-align: middle;
+      }
+      @media (max-width: 640px) {
+        #firebaseStatusText .pill-prefix {
+          display: none;
+        }
+        #firebaseSyncPill {
+          max-width: 110px;
+        }
+        #firebaseStatusText {
+          max-width: 85px;
+        }
+      }
+      .content-area {
+        padding: 12px 12px 24px 12px;
+      }
+
+      /* Mobile Bottom Navigation Bar */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: calc(60px + env(safe-area-inset-bottom, 0px));
+        min-height: 60px;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid var(--border);
+        z-index: 90;
+        align-items: flex-start;
+        justify-content: space-around;
+        padding: 4px 4px 0 4px;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+        box-sizing: border-box;
+      }
+      .mobile-nav-item {
+        flex: 1;
+        height: 52px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        font-family: inherit;
+        font-size: 10.5px;
+        font-weight: 600;
+        padding: 3px 2px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        position: relative;
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .mobile-nav-item svg {
+        margin-bottom: 2px;
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s;
+      }
+      .mobile-nav-item.active {
+        color: var(--primary);
+      }
+      .mobile-nav-item.active svg {
+        transform: scale(1.12);
+        color: var(--primary);
+      }
+      .mobile-nav-item:active {
+        transform: scale(0.92);
+      }
+      .mobile-nav-icon-wrap {
+        position: relative;
+        display: inline-flex;
+      }
+      .mobile-badge {
+        position: absolute;
+        top: -4px;
+        right: -8px;
+        background: var(--primary);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        border-radius: 10px;
+        padding: 1px 5px;
+        min-width: 16px;
+        text-align: center;
+        line-height: 12px;
+      }
+
+      /* Mobile FAB Speed Dial */
+      .mobile-fab-wrap {
+        display: block;
+        position: fixed;
+        bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+        right: 16px;
+        z-index: 92;
+      }
+      .mobile-fab-btn {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+        color: #fff;
+        border: none;
+        box-shadow: 0 4px 16px rgba(255, 101, 0, 0.42), 0 2px 6px rgba(0,0,0,0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        -webkit-tap-highlight-color: transparent;
+      }
+      .mobile-fab-btn.open {
+        transform: rotate(45deg);
+        background: var(--text-main);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      }
+      .mobile-fab-btn:active {
+        transform: scale(0.92);
+      }
+      .mobile-fab-menu {
+        position: absolute;
+        bottom: 64px;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(12px) scale(0.95);
+        transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .mobile-fab-menu.open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+      }
+      .mobile-fab-action {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        font-family: inherit;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .mobile-fab-action:active {
+        transform: scale(0.96);
+      }
+      .mobile-fab-label {
+        background: #fff;
+        padding: 7px 12px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-main);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        white-space: nowrap;
+        border: 1px solid var(--border);
+      }
+      .mobile-fab-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      }
+
+      /* Mobile Bottom Sheet Modals */
+      .modal-backdrop {
+        padding: 0;
+        align-items: flex-end !important;
+      }
+      .modal-window {
+        max-width: 100% !important;
+        width: 100% !important;
+        border-radius: 20px 20px 0 0 !important;
+        max-height: 92vh !important;
+        max-height: 92dvh !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        animation: modalSheetSlide 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+      @keyframes modalSheetSlide {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+      }
+      .modal-window::before {
+        content: "";
+        display: block;
+        width: 38px;
+        height: 4px;
+        background: #E2E4E9;
+        border-radius: 4px;
+        margin: 8px auto 2px;
+        flex-shrink: 0;
+      }
+      .modal-header, .modal-footer {
+        flex-shrink: 0 !important;
+      }
+      .modal-body {
+        padding: 16px !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+      .modal-footer {
+        padding: 12px 16px !important;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .modal-footer .btn {
+        flex: 1;
+        min-height: 44px;
+        justify-content: center;
+      }
+
+      /* Mobile Toolbars & Filters */
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 10px;
+      }
+      .toolbar-left, .toolbar-right {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .toolbar-left .search-input {
+        width: 100%;
+        min-width: 100%;
+      }
+      .toolbar-left select {
+        flex: 1;
+        min-width: 120px;
+      }
+      .toolbar-right .btn {
+        flex: 1;
+        justify-content: center;
+        min-height: 40px;
+      }
+
+      /* Touch-Friendly Tables with Horizontal Momentum Scroll */
+      .table-container {
+        border-radius: var(--radius-md);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        position: relative;
+      }
+      .data-table {
+        min-width: 580px;
+      }
+      .data-table th, .data-table td {
+        padding: 11px 10px;
+        font-size: 13px;
+      }
+      .data-table .btn-sm {
+        padding: 7px 11px;
+        font-size: 12.5px;
+        min-height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .action-btn, .btn-icon {
+        min-width: 38px;
+        min-height: 38px;
+      }
+
+      /* Touch-friendly Tabs in Patient Profile */
+      .profile-tabs-header {
+        overflow-x: auto !important;
+        flex-wrap: nowrap !important;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+        gap: 6px;
+      }
+      .profile-tabs-header .btn, .profile-tab-btn {
+        flex-shrink: 0;
+        white-space: nowrap;
+        padding: 9px 14px;
+        font-size: 13px;
+      }
+      .profile-tab-pane {
+        max-height: none !important;
+        overflow: visible !important;
+      }
+
+      /* Prevent iOS Zoom on Inputs */
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      input[type="number"],
+      input[type="date"],
+      input[type="time"],
+      input[type="tel"],
+      select,
+      textarea {
+        font-size: 16px !important;
+      }
+
+      /* Toast Notifications lifted above Bottom Nav */
+      .toast-container {
+        bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
+        left: 12px !important;
+        right: 12px !important;
+        max-width: none !important;
+      }
+      .toast {
+        min-width: auto !important;
+        width: 100% !important;
       }
     }
   </style>
@@ -1356,6 +2074,7 @@
         <span class="brand-title">Functional Rehab Lab</span>
         <span class="brand-badge">Admin &bull; Data Entry</span>
       </div>
+      <button class="btn-icon mobile-sidebar-close" onclick="toggleSidebar(false)" aria-label="Close menu">&times;</button>
     </div>
 
     <ul class="nav-list">
@@ -1440,6 +2159,7 @@
       <div class="dev-tag">Developer: Namith RN</div>
     </div>
   </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)"></div>
 
   <!-- Main Wrapper -->
   <div class="main-wrapper">
@@ -1463,7 +2183,7 @@
         
         <div class="live-date-pill" id="firebaseSyncPill" title="Firebase Project: functional-rehab-lab (Click for sync & security)" style="cursor: pointer;" onclick="openFirebaseSyncModal()">
           <span class="badge-dot" id="firebaseSyncDot" style="background: #F59E0B;"></span>
-          <span id="firebaseStatusText">Firebase: Connecting...</span>
+          <span id="firebaseStatusText"><span class="pill-prefix">Firebase: </span><span class="pill-status">Connecting...</span></span>
         </div>
         <div class="live-date-pill" id="liveDatePill">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -2132,7 +2852,80 @@
                   <input type="text" class="form-control" id="setPatientPrefix" value="FRL-P-" required>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary">Save Settings</button>
+
+              <!-- Official Clinic Letterhead & Print Settings -->
+              <div style="background: #FAFBFD; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; margin: 14px 0;">
+                <h4 style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; display:flex; align-items:center; gap:6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                  <span>Official Clinic Letterhead & Invoice Print Information</span>
+                </h4>
+                <div class="form-group" style="margin-bottom:8px;">
+                  <label class="form-label">Clinic Full Address (Printed on Invoices)</label>
+                  <input type="text" class="form-control" id="setClinicAddress" value="1st Floor, 100ft Road, Indiranagar, Bengaluru, Karnataka - 560038" placeholder="Complete clinic address">
+                </div>
+                <div class="form-row" style="margin-bottom:8px;">
+                  <div class="form-group">
+                    <label class="form-label">Clinic Contact Phone</label>
+                    <input type="text" class="form-control" id="setClinicPhone" value="+91 98765 43210" placeholder="+91 XXXXX XXXXX">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Clinic Contact Email</label>
+                    <input type="email" class="form-control" id="setClinicEmail" value="contact@functionalrehablab.com" placeholder="Email for patients">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Clinic UPI ID (For Invoice Scan & Pay)</label>
+                    <input type="text" class="form-control" id="setClinicUpiId" value="functionalrehablab@upi" placeholder="e.g. clinic@upi">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">GSTIN / Registration No. (Optional)</label>
+                    <input type="text" class="form-control" id="setClinicGst" placeholder="e.g. 29AAAAA0000A1Z5">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dedicated Admission Billing & Auto-Invoice Defaults -->
+              <div style="background: linear-gradient(135deg, #FFF9F5 0%, #FFF2EB 100%); border: 1.5px solid #FFD6BA; border-radius: var(--radius-sm); padding: 14px; margin: 14px 0 18px 0;">
+                <h4 style="font-size: 13.5px; font-weight: 700; color: #9A3412; margin-bottom: 8px; display:flex; align-items:center; gap:6px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                  <span>Admission & Registration Auto-Invoice Setup</span>
+                </h4>
+                <div class="form-group" style="margin-bottom:10px;">
+                  <label style="display:inline-flex; align-items:center; cursor:pointer; gap:8px;">
+                    <input type="checkbox" id="setAdmissionAutoInvoice" checked style="width:16px; height:16px; accent-color:var(--primary);">
+                    <span style="font-size:13px; font-weight:700; color:var(--text-main);">Automatically Enable Auto-Invoice on New Patient Registration</span>
+                  </label>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Default Admission Fee (₹)</label>
+                    <input type="number" class="form-control" id="setAdmissionFeeAmount" value="500" min="0" step="50">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Default Payment Status</label>
+                    <select class="form-control" id="setAdmissionPaymentStatus">
+                      <option value="Paid" selected>Immediate Settlement (Paid)</option>
+                      <option value="Unpaid">Pending / Unpaid (Due Later)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Default Payment Mode</label>
+                    <select class="form-control" id="setAdmissionPaymentMode">
+                      <option value="UPI" selected>UPI / Google Pay / PhonePe</option>
+                      <option value="Cash">Cash at Counter</option>
+                      <option value="Credit/Debit Card">Debit / Credit Card</option>
+                      <option value="Net Banking">Net Banking / Transfer</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label">Default Admission Service Description</label>
+                  <input type="text" class="form-control" id="setAdmissionFeeDesc" value="Registration & Initial Clinical Assessment / Consultation Fee">
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="min-width:140px;">Save Settings</button>
             </form>
           </div>
 
@@ -2215,6 +3008,71 @@
       </section>
 
     </main>
+  </div>
+
+  <!-- ================= MOBILE INTERACTIVE NAVIGATION & FAB ================= -->
+  
+  <!-- Mobile Bottom Navigation Bar (Screens <= 768px) -->
+  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Mobile Navigation">
+    <button class="mobile-nav-item active" data-view="dashboard" onclick="navigate('dashboard')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span>Dashboard</span>
+    </button>
+    <button class="mobile-nav-item" data-view="patients" onclick="navigate('patients')">
+      <span class="mobile-nav-icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <span class="mobile-badge" id="mobileBadgePatients" style="display:none;">0</span>
+      </span>
+      <span>Patients</span>
+    </button>
+    <button class="mobile-nav-item" data-view="appointments" onclick="navigate('appointments')">
+      <span class="mobile-nav-icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        <span class="mobile-badge" id="mobileBadgeApts" style="display:none;">0</span>
+      </span>
+      <span>Schedule</span>
+    </button>
+    <button class="mobile-nav-item" data-view="invoices" onclick="navigate('invoices')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+      <span>Billing</span>
+    </button>
+    <button class="mobile-nav-item" id="mobileNavMoreBtn" onclick="toggleSidebar()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      <span>More</span>
+    </button>
+  </nav>
+
+  <!-- Mobile Floating Action Speed Dial -->
+  <div class="mobile-fab-wrap" id="mobileFabWrap">
+    <div class="mobile-fab-menu" id="mobileFabMenu">
+      <button class="mobile-fab-action" onclick="openPatientModal(); toggleMobileFab(false);">
+        <span class="mobile-fab-label">Register Patient</span>
+        <span class="mobile-fab-icon" style="background:#FF6500; color:#fff;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+        </span>
+      </button>
+      <button class="mobile-fab-action" onclick="openAppointmentModal(); toggleMobileFab(false);">
+        <span class="mobile-fab-label">Book Appointment</span>
+        <span class="mobile-fab-icon" style="background:#3B82F6; color:#fff;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </span>
+      </button>
+      <button class="mobile-fab-action" onclick="openInvoiceModal(); toggleMobileFab(false);">
+        <span class="mobile-fab-label">New Invoice</span>
+        <span class="mobile-fab-icon" style="background:#10B981; color:#fff;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+        </span>
+      </button>
+      <button class="mobile-fab-action" onclick="openExpenseModal(); toggleMobileFab(false);">
+        <span class="mobile-fab-label">Add Expense</span>
+        <span class="mobile-fab-icon" style="background:#EF4444; color:#fff;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </span>
+      </button>
+    </div>
+    <button class="mobile-fab-btn" id="mobileMainFab" onclick="toggleMobileFab()" aria-label="Quick Actions">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    </button>
   </div>
 
   <!-- ================= MODALS ================= -->
@@ -2322,12 +3180,107 @@
               </select>
             </div>
           </div>
+
+          <!-- Admission / Registration Fee Auto-Invoice Setup -->
+          <div class="admission-billing-card" id="admissionBillingSetupCard" style="background: linear-gradient(135deg, #FFF9F5 0%, #FFF2EB 100%); border: 1.5px solid #FFD6BA; border-radius: var(--radius-md); padding: 16px; margin-top: 16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 12px; gap: 10px; flex-wrap: wrap;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:34px; height:34px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </div>
+                <div>
+                  <h4 style="font-size: 14.5px; font-weight: 700; color: var(--text-main); margin: 0;">Admission & Consultation Fee Setup</h4>
+                  <span style="font-size: 11.5px; color: var(--text-secondary);">Automatically generate official clinical admission invoice on registration</span>
+                </div>
+              </div>
+              <label style="display:inline-flex; align-items:center; cursor:pointer; gap:8px; background:#fff; padding:6px 12px; border-radius:20px; border:1px solid #FFD6BA; box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+                <input type="checkbox" id="pAutoInvoiceCheck" onchange="toggleAdmissionBillingFields(this.checked)" checked style="width:17px; height:17px; accent-color:var(--primary); cursor:pointer;">
+                <span style="font-size: 12.5px; font-weight: 700; color: var(--primary);">Auto-Generate Invoice</span>
+              </label>
+            </div>
+
+            <div id="admissionBillingFields" style="border-top: 1px dashed rgba(255, 101, 0, 0.25); padding-top: 14px;">
+              <div class="form-row">
+                <div class="form-group" style="flex:1;">
+                  <label class="form-label">Admission / Consultation Fee (₹) <span class="req">*</span></label>
+                  <div style="position:relative;">
+                    <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:700; color:var(--text-secondary);">₹</span>
+                    <input type="number" class="form-control" id="pAdmissionFeeAmount" min="0" step="50" style="padding-left:28px; font-weight:700; font-size:15px; color:var(--primary);" value="500" placeholder="500" oninput="updateAdmissionFeePreview()">
+                  </div>
+                </div>
+                <div class="form-group" style="flex:2;">
+                  <label class="form-label">Service Item Description</label>
+                  <input type="text" class="form-control" id="pAdmissionFeeDesc" value="Registration & Initial Clinical Assessment / Consultation Fee" placeholder="Service description">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Settlement Status</label>
+                  <select class="form-control" id="pAdmissionPaymentStatus" onchange="toggleAdmissionPaymentMethod(this.value)">
+                    <option value="Paid" selected>Immediate Settlement (Paid in Full)</option>
+                    <option value="Unpaid">Pending / Unpaid (Due Later)</option>
+                  </select>
+                </div>
+                <div class="form-group" id="admissionPaymentMethodGroup">
+                  <label class="form-label">Payment Mode</label>
+                  <select class="form-control" id="pAdmissionPaymentMethod" onchange="updateAdmissionFeePreview()">
+                    <option value="UPI" selected>UPI / Google Pay / PhonePe</option>
+                    <option value="Cash">Cash at Counter</option>
+                    <option value="Credit/Debit Card">Debit / Credit Card</option>
+                    <option value="Net Banking">Net Banking / Transfer</option>
+                  </select>
+                </div>
+                <div class="form-group" id="admissionPaymentRefGroup">
+                  <label class="form-label">Payment Ref / Note (Optional)</label>
+                  <input type="text" class="form-control" id="pAdmissionPaymentRef" placeholder="e.g. UPI Ref / Cash memo">
+                </div>
+              </div>
+
+              <div style="background: rgba(255, 255, 255, 0.85); border-radius: var(--radius-sm); padding: 8px 12px; display:flex; align-items:center; justify-content:space-between; font-size: 12px; color:var(--text-secondary); margin-top: 4px; flex-wrap: wrap; gap: 8px;">
+                <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:4px; color:var(--success);"><polyline points="20 6 9 17 4 12"></polyline></svg> Linked to new Patient UHID, recorded in ledger & synced to cloud</span>
+                <span style="font-weight:700; color:var(--primary); background:#FFF2EB; padding:3px 10px; border-radius:12px; border:1px solid #FFD6BA;" id="admissionFeePreviewBadge">₹500 • Paid via UPI</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="closeModal('patientModal')">Cancel</button>
           <button type="submit" class="btn btn-primary" id="btnSavePatient">Save Patient Record</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- 1b. Admission Invoice Success Action Modal -->
+  <div class="modal-backdrop" id="admissionSuccessModal">
+    <div class="modal-window" style="max-width: 520px;">
+      <div class="modal-header" style="background:linear-gradient(135deg, #FFF8F3 0%, #FFF2EB 100%); border-bottom:1.5px solid #FFD6BA;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:36px; height:36px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(255,101,0,0.3);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <div>
+            <h3 class="modal-title" style="font-size:16.5px; color:#9A3412;">Registration & Admission Confirmed</h3>
+            <span style="font-size:12px; color:var(--text-secondary);">Patient UHID & Official Invoice Generated</span>
+          </div>
+        </div>
+        <button class="btn-icon" onclick="closeModal('admissionSuccessModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="admissionSuccessBody" style="padding: 20px;">
+        <!-- Filled dynamically -->
+      </div>
+      <div class="modal-footer" style="gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('admissionSuccessModal')">Dismiss</button>
+        <button type="button" class="btn btn-accent" id="btnAdmWhatsAppReceipt">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          <span>Share WhatsApp Receipt</span>
+        </button>
+        <button type="button" class="btn btn-primary" id="btnAdmPrintReceipt">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          <span>Print A4 Invoice</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -2687,22 +3640,54 @@
     </div>
   </div>
 
-  <!-- 6. Print / View Invoice Modal (A4 Ready) -->
+  <!-- 6. Print / View Invoice Modal (A4 Ready & Thermal Mode) -->
   <div class="modal-backdrop" id="invoicePrintModal">
     <div class="modal-window modal-lg">
-      <div class="modal-header">
-        <h3 class="modal-title">Invoice Document Preview</h3>
-        <div style="display:flex; gap:8px;">
-          <button class="btn btn-secondary btn-sm" onclick="window.print()">
+      <div class="modal-header" style="flex-wrap: wrap; gap: 10px;">
+        <div>
+          <h3 class="modal-title" id="invModalDocTitle">Clinical Invoice & Receipt Preview</h3>
+          <span style="font-size:11.5px; color:var(--text-secondary);" id="invModalSubTitle">A4 Clinical Letterhead & 80mm Counter Slip</span>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <div class="btn-group" style="display:inline-flex; border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; background:#F1F5F9; padding:2px;">
+            <button type="button" class="btn btn-sm" id="btnInvModeA4" onclick="switchInvoicePrintMode('a4')" style="background:#fff; color:var(--text-main); font-weight:700; border:none; padding:4px 10px; box-shadow:0 1px 3px rgba(0,0,0,0.06);">📄 A4 Format</button>
+            <button type="button" class="btn btn-sm" id="btnInvModeThermal" onclick="switchInvoicePrintMode('thermal')" style="background:transparent; color:var(--text-secondary); border:none; padding:4px 10px;">🧾 80mm Slip</button>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="printActiveInvoiceDocument()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-            <span>Print A4 Invoice</span>
+            <span>Print Receipt</span>
           </button>
-          <button class="btn btn-accent btn-sm" id="btnInvWhatsAppShare">Share on WhatsApp</button>
+          <button class="btn btn-accent btn-sm" id="btnInvWhatsAppShare">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            <span>WhatsApp</span>
+          </button>
           <button class="btn-icon" onclick="closeModal('invoicePrintModal')">&times;</button>
         </div>
       </div>
-      <div class="modal-body" id="invoicePrintContent" style="padding: 30px; background:#fff;">
+      <div class="modal-body" id="invoicePrintContent" style="padding: 24px; background:#fff;">
         <!-- Dynamic Printable Invoice -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 6b. Print / View Patient Clinical Summary Modal (A4 Ready) -->
+  <div class="modal-backdrop" id="patientPrintModal">
+    <div class="modal-window modal-lg">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">Patient Clinical Case Summary & Record</h3>
+          <span style="font-size:12px; color:var(--text-secondary);">Official physiotherapy evaluation, treatment logs & accounts</span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-primary btn-sm" onclick="window.print()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            <span>Print Clinical Record</span>
+          </button>
+          <button class="btn-icon" onclick="closeModal('patientPrintModal')">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body" id="patientPrintContent" style="padding: 24px; background:#fff;">
+        <!-- Dynamic Printable Patient Summary -->
       </div>
     </div>
   </div>
@@ -3621,7 +4606,15 @@ service cloud.firestore {
         const modalStatusText = document.getElementById("modalSyncStatusText");
         const modalDetailsText = document.getElementById("modalSyncDetailsText");
 
-        if (textEl) textEl.textContent = "Firebase: " + status;
+        if (textEl) {
+          const prefixSpan = textEl.querySelector(".pill-prefix");
+          const statusSpan = textEl.querySelector(".pill-status");
+          if (prefixSpan && statusSpan) {
+            statusSpan.textContent = status;
+          } else {
+            textEl.innerHTML = `<span class="pill-prefix">Firebase: </span><span class="pill-status">${escapeHTML(status)}</span>`;
+          }
+        }
         if (modalStatusText) modalStatusText.textContent = status;
         if (modalDetailsText && details) modalDetailsText.textContent = details;
 
@@ -3859,8 +4852,27 @@ service cloud.firestore {
       };
       document.getElementById("pageHeadingTitle").textContent = titles[viewName] || "Functional Rehab Lab";
 
-      // Close mobile sidebar if open
-      document.getElementById("sidebar").classList.remove("open");
+      // Close mobile sidebar and FAB if open
+      toggleSidebar(false);
+      toggleMobileFab(false);
+
+      // Update mobile bottom navigation bar active state
+      document.querySelectorAll(".mobile-nav-item").forEach(item => {
+        if (item.dataset.view === viewName) {
+          item.classList.add("active");
+        } else if (item.dataset.view) {
+          item.classList.remove("active");
+        }
+      });
+      const secondaryViews = ['packages', 'expenses', 'reports', 'doctors', 'settings'];
+      const moreBtn = document.getElementById("mobileNavMoreBtn");
+      if (moreBtn) {
+        if (secondaryViews.includes(viewName)) {
+          moreBtn.classList.add("active");
+        } else {
+          moreBtn.classList.remove("active");
+        }
+      }
 
       // Handle filters from navigation clicks
       if (viewName === 'patients' && filterParams.status) {
@@ -3893,8 +4905,34 @@ service cloud.firestore {
       updateSidebarBadges();
     }
 
-    function toggleSidebar() {
-      document.getElementById("sidebar").classList.toggle("open");
+    function toggleSidebar(forceState) {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+      if (!sidebar) return;
+      const willOpen = (forceState !== undefined) ? forceState : !sidebar.classList.contains("open");
+      if (willOpen) {
+        sidebar.classList.add("open");
+        if (overlay) overlay.classList.add("show");
+        document.body.style.overflow = "hidden";
+      } else {
+        sidebar.classList.remove("open");
+        if (overlay) overlay.classList.remove("show");
+        document.body.style.overflow = "";
+      }
+    }
+
+    function toggleMobileFab(forceState) {
+      const menu = document.getElementById("mobileFabMenu");
+      const btn = document.getElementById("mobileMainFab");
+      if (!menu || !btn) return;
+      const willOpen = (forceState !== undefined) ? forceState : !menu.classList.contains("open");
+      if (willOpen) {
+        menu.classList.add("open");
+        btn.classList.add("open");
+      } else {
+        menu.classList.remove("open");
+        btn.classList.remove("open");
+      }
     }
 
     function toggleDropdown(id) {
@@ -3910,6 +4948,9 @@ service cloud.firestore {
       if (!e.target.closest(".dropdown")) {
         closeDropdowns();
       }
+      if (!e.target.closest("#mobileFabWrap")) {
+        toggleMobileFab(false);
+      }
     });
 
     // Modal Helpers with Scrolling Prevention on Body
@@ -3917,6 +4958,7 @@ service cloud.firestore {
       const m = document.getElementById(id);
       if (m) {
         m.classList.add("show");
+        document.body.classList.add("modal-open");
         document.body.style.overflow = "hidden";
         const body = m.querySelector(".modal-body");
         if (body) body.scrollTop = 0;
@@ -3928,6 +4970,7 @@ service cloud.firestore {
       if (m) m.classList.remove("show");
       const anyOpen = document.querySelector(".modal-backdrop.show");
       if (!anyOpen) {
+        document.body.classList.remove("modal-open");
         document.body.style.overflow = "";
       }
     }
@@ -4235,12 +5278,110 @@ service cloud.firestore {
       `).join('');
     }
 
+    // --- Admission Billing & Auto-Invoice Helpers ---
+    function toggleAdmissionBillingFields(enabled) {
+      const fields = document.getElementById("admissionBillingFields");
+      if (fields) fields.style.display = enabled ? "block" : "none";
+      updateAdmissionFeePreview();
+    }
+
+    function toggleAdmissionPaymentMethod(status) {
+      const methodGroup = document.getElementById("admissionPaymentMethodGroup");
+      const refGroup = document.getElementById("admissionPaymentRefGroup");
+      const isPaid = (status === "Paid");
+      if (methodGroup) methodGroup.style.display = isPaid ? "block" : "none";
+      if (refGroup) refGroup.style.display = isPaid ? "block" : "none";
+      updateAdmissionFeePreview();
+    }
+
+    function updateAdmissionFeePreview() {
+      const badge = document.getElementById("admissionFeePreviewBadge");
+      const check = document.getElementById("pAutoInvoiceCheck");
+      if (!badge) return;
+      if (!check || !check.checked) {
+        badge.textContent = "Auto-Invoice Disabled";
+        badge.style.color = "var(--text-secondary)";
+        badge.style.background = "#F1F5F9";
+        badge.style.borderColor = "#CBD5E1";
+        return;
+      }
+      const amt = Math.max(0, Number(document.getElementById("pAdmissionFeeAmount")?.value) || 0);
+      const status = document.getElementById("pAdmissionPaymentStatus")?.value || "Paid";
+      const method = document.getElementById("pAdmissionPaymentMethod")?.value || "UPI";
+      if (status === "Paid") {
+        badge.textContent = `₹${amt} • Paid via ${method}`;
+        badge.style.color = "var(--success)";
+        badge.style.background = "#ECFDF5";
+        badge.style.borderColor = "#A7F3D0";
+      } else {
+        badge.textContent = `₹${amt} • Pending / Unpaid`;
+        badge.style.color = "var(--warning)";
+        badge.style.background = "#FFFBEB";
+        badge.style.borderColor = "#FDE68A";
+      }
+    }
+
+    function showAdmissionSuccessModal(patientData, invoice) {
+      const body = document.getElementById("admissionSuccessBody");
+      if (!body) return;
+      const isPaid = (invoice.status === "Paid");
+      body.innerHTML = `
+        <div style="background:#FAFBFD; border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+            <div>
+              <span style="font-size:11px; text-transform:uppercase; color:var(--text-secondary); font-weight:700;">Registered Patient</span>
+              <div style="font-size:16px; font-weight:700; color:var(--text-main); margin-top:2px;">${escapeHTML(patientData.fullName)}</div>
+              <div style="font-size:12px; color:var(--primary); font-weight:700;">UHID: ${escapeHTML(patientData.id)}</div>
+            </div>
+            <div style="text-align:right;">
+              <span style="font-size:11px; text-transform:uppercase; color:var(--text-secondary); font-weight:700;">Attending Doctor</span>
+              <div style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-top:2px;">${escapeHTML(patientData.assignedDoctor || 'Dr Suhaib')}</div>
+              <div style="font-size:11.5px; color:var(--text-secondary);">${formatDateDisplay(patientData.registrationDate)}</div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px;">
+            <div>
+              <div style="font-size:10.5px; text-transform:uppercase; color:var(--text-secondary); font-weight:700;">Official Admission Invoice</div>
+              <div style="font-size:15px; font-weight:800; color:var(--primary);">${escapeHTML(invoice.number)}</div>
+              <div style="font-size:12px; color:var(--text-secondary);">${escapeHTML(invoice.items[0]?.description || 'Admission Fee')}</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:18px; font-weight:800; color:${isPaid ? 'var(--success)' : 'var(--danger)'};">${formatINR(invoice.total)}</div>
+              <span class="badge ${isPaid ? 'badge-success' : 'badge-danger'}" style="font-size:11px; padding:3px 8px;">
+                ${isPaid ? `✓ Paid via ${invoice.payments[0]?.method || 'Cash'}` : 'Payment Due'}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:12px; color:var(--text-secondary); line-height:1.45;">
+          The admission fee invoice has been added to accounts, linked to patient UHID <strong>${escapeHTML(patientData.id)}</strong>, and mirrored to Cloud Firestore. You can print the receipt or share it via WhatsApp immediately.
+        </div>
+      `;
+
+      document.getElementById("btnAdmPrintReceipt").onclick = () => {
+        closeModal("admissionSuccessModal");
+        viewPrintInvoice(invoice.id);
+      };
+
+      document.getElementById("btnAdmWhatsAppReceipt").onclick = () => {
+        closeModal("admissionSuccessModal");
+        promptInvoiceWhatsApp(invoice);
+      };
+
+      openModal("admissionSuccessModal");
+    }
+
     function openPatientModal(patientId = null) {
       const form = document.getElementById("patientForm");
       form.reset();
 
+      const admCard = document.getElementById("admissionBillingSetupCard");
+
       if (patientId) {
         document.getElementById("patientModalTitle").textContent = "Edit Patient Record";
+        if (admCard) admCard.style.display = "none";
+
         const patients = getStoredData(STORAGE_KEYS.patients, []);
         const p = patients.find(item => item.id === patientId);
         if (p) {
@@ -4269,6 +5410,34 @@ service cloud.firestore {
         document.getElementById("pRegDate").value = getTodayYMD();
         document.getElementById("pStatus").value = "Active";
         document.getElementById("pDoctor").value = "Dr Suhaib";
+
+        // Initialize admission billing setup for new patient
+        if (admCard) {
+          admCard.style.display = "block";
+          const settings = getStoredData(STORAGE_KEYS.settings, {});
+          const autoInvoice = (settings.admissionAutoInvoice !== false);
+          const chk = document.getElementById("pAutoInvoiceCheck");
+          if (chk) chk.checked = autoInvoice;
+          
+          const feeAmtInput = document.getElementById("pAdmissionFeeAmount");
+          if (feeAmtInput) feeAmtInput.value = (settings.admissionFeeAmount !== undefined) ? settings.admissionFeeAmount : 500;
+          
+          const feeDescInput = document.getElementById("pAdmissionFeeDesc");
+          if (feeDescInput) feeDescInput.value = settings.admissionFeeDesc || "Registration & Initial Clinical Assessment / Consultation Fee";
+          
+          const pStatusSelect = document.getElementById("pAdmissionPaymentStatus");
+          if (pStatusSelect) pStatusSelect.value = settings.admissionPaymentStatus || "Paid";
+
+          const pMethodSelect = document.getElementById("pAdmissionPaymentMethod");
+          if (pMethodSelect) pMethodSelect.value = settings.admissionPaymentMode || "UPI";
+
+          const pRefInput = document.getElementById("pAdmissionPaymentRef");
+          if (pRefInput) pRefInput.value = "";
+
+          toggleAdmissionBillingFields(autoInvoice);
+          toggleAdmissionPaymentMethod(pStatusSelect ? pStatusSelect.value : "Paid");
+          updateAdmissionFeePreview();
+        }
       }
       openModal("patientModal");
     }
@@ -4283,6 +5452,7 @@ service cloud.firestore {
     function savePatient(e) {
       e.preventDefault();
       const existingId = document.getElementById("pRecordId").value;
+      const isNewPatient = !existingId;
       const patients = getStoredData(STORAGE_KEYS.patients, []);
 
       const patientData = {
@@ -4309,6 +5479,61 @@ service cloud.firestore {
         return;
       }
 
+      let createdAdmissionInvoice = null;
+
+      // Handle Auto Admission Invoice on New Patient Creation
+      if (isNewPatient) {
+        const autoInvChecked = document.getElementById("pAutoInvoiceCheck")?.checked;
+        const feeAmount = Math.max(0, Number(document.getElementById("pAdmissionFeeAmount")?.value) || 0);
+
+        if (autoInvChecked && feeAmount > 0) {
+          const feeDesc = document.getElementById("pAdmissionFeeDesc")?.value.trim() || "Registration & Initial Clinical Assessment / Consultation Fee";
+          const paymentStatus = document.getElementById("pAdmissionPaymentStatus")?.value || "Paid";
+          const paymentMethod = document.getElementById("pAdmissionPaymentMethod")?.value || "UPI";
+          const paymentRef = document.getElementById("pAdmissionPaymentRef")?.value.trim() || "";
+          const isPaid = (paymentStatus === "Paid");
+
+          const invNumber = getNextId('invoice');
+          const todayStr = patientData.registrationDate || getTodayYMD();
+
+          createdAdmissionInvoice = {
+            id: invNumber,
+            number: invNumber,
+            patientId: patientData.id,
+            patientName: patientData.fullName,
+            patientPhone: patientData.phone,
+            patientWhatsApp: patientData.whatsapp || patientData.phone,
+            date: todayStr,
+            dueDate: todayStr,
+            items: [{
+              description: feeDesc,
+              quantity: 1,
+              unitPrice: feeAmount
+            }],
+            subtotal: feeAmount,
+            discount: 0,
+            taxPercent: 0,
+            total: feeAmount,
+            paid: isPaid ? feeAmount : 0,
+            balance: isPaid ? 0 : feeAmount,
+            status: isPaid ? "Paid" : "Unpaid",
+            notes: isPaid 
+              ? `Official admission & consultation fee settled via ${paymentMethod}${paymentRef ? ` (Ref: ${paymentRef})` : ''}. Thank you for choosing Functional Rehab Lab.`
+              : "Admission & registration fee pending payment.",
+            payments: isPaid ? [{
+              date: todayStr,
+              method: paymentMethod,
+              amount: feeAmount,
+              notes: paymentRef || "Admission registration settlement"
+            }] : []
+          };
+
+          const invoices = getStoredData(STORAGE_KEYS.invoices, []);
+          invoices.push(createdAdmissionInvoice);
+          setStoredData(STORAGE_KEYS.invoices, invoices);
+        }
+      }
+
       if (existingId) {
         const index = patients.findIndex(p => p.id === existingId);
         if (index !== -1) {
@@ -4320,11 +5545,6 @@ service cloud.firestore {
         patients.push(patientData);
         setStoredData(STORAGE_KEYS.patients, patients);
         showToast(`Patient ${patientData.id} registered successfully`);
-
-        // Ask for WhatsApp Welcome Greeting
-        setTimeout(() => {
-          promptWhatsAppWelcome(patientData);
-        }, 500);
       }
 
       closeModal("patientModal");
@@ -4336,11 +5556,23 @@ service cloud.firestore {
       }
 
       renderPatientsTable();
+      renderInvoicesTable();
       renderDashboard();
       updateSidebarBadges();
       populatePatientDropdown("aptPatientSelect");
       populatePatientDropdown("invPatientSelect");
       populatePatientDropdown("pkgAssignPatient");
+
+      // Interactive Follow-up: Show admission confirmation modal or welcome prompt
+      if (createdAdmissionInvoice) {
+        setTimeout(() => {
+          showAdmissionSuccessModal(patientData, createdAdmissionInvoice);
+        }, 300);
+      } else if (isNewPatient) {
+        setTimeout(() => {
+          promptWhatsAppWelcome(patientData);
+        }, 500);
+      }
     }
 
     function archivePatient(patientId, isArchiving) {
@@ -4360,7 +5592,10 @@ service cloud.firestore {
       }
     }
 
+    let currentActiveProfilePatientId = null;
+
     function viewPatientProfile(patientId) {
+      currentActiveProfilePatientId = patientId;
       const patients = getStoredData(STORAGE_KEYS.patients, []);
       const p = patients.find(item => item.id === patientId);
       if (!p) return;
@@ -4448,7 +5683,224 @@ service cloud.firestore {
     }
 
     function printPatientSummary() {
-      window.print();
+      if (currentActiveProfilePatientId) {
+        viewPrintPatientSummary(currentActiveProfilePatientId);
+      } else {
+        window.print();
+      }
+    }
+
+    // View & Print Complete Patient Clinical Case Summary & Record
+    function viewPrintPatientSummary(patientId) {
+      const pid = patientId || currentActiveProfilePatientId;
+      if (!pid) return;
+
+      const patients = getStoredData(STORAGE_KEYS.patients, []);
+      const p = patients.find(item => item.id === pid);
+      if (!p) return;
+
+      const settings = getStoredData(STORAGE_KEYS.settings, {});
+      const centreName = settings.centreName || "Functional Rehab Lab";
+      const logoUrl = settings.logoUrl || ASSETS.logo;
+      const clinicAddress = settings.clinicAddress || "1st Floor, 100ft Road, Indiranagar, Bengaluru, Karnataka - 560038";
+      const clinicPhone = settings.clinicPhone || "+91 98765 43210";
+      const clinicEmail = settings.clinicEmail || "contact@functionalrehablab.com";
+
+      const appointments = getStoredData(STORAGE_KEYS.appointments, []).filter(a => a.patientId === p.id);
+      const invoices = getStoredData(STORAGE_KEYS.invoices, []).filter(inv => inv.patientId === p.id);
+      const pkgs = getStoredData(STORAGE_KEYS.patientPackages, []).filter(pk => pk.patientId === p.id);
+
+      const totalBilled = invoices.reduce((s, inv) => s + (Number(inv.total) || 0), 0);
+      const totalPaid = invoices.reduce((s, inv) => s + (Number(inv.paid) || 0), 0);
+      const outstandingDue = Math.max(0, totalBilled - totalPaid);
+
+      const container = document.getElementById("patientPrintContent");
+      if (!container) return;
+
+      container.innerHTML = `
+        <div class="clinical-summary-doc">
+          <!-- Header -->
+          <div class="cinv-header">
+            <div class="cinv-brand-box">
+              <img src="${logoUrl}" alt="${escapeHTML(centreName)}" class="cinv-logo" onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'width:58px;height:58px;background:var(--primary);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;\\'>FRL</div>';">
+              <div>
+                <h2 class="cinv-clinic-name">${escapeHTML(centreName)}</h2>
+                <div class="cinv-clinic-subtitle">Advanced Physiotherapy, Orthopaedic & Sports Rehabilitation</div>
+                <div class="cinv-clinic-contact">
+                  <div>${escapeHTML(clinicAddress)}</div>
+                  <div>Phone: <strong>${escapeHTML(clinicPhone)}</strong> &bull; Email: ${escapeHTML(clinicEmail)}</div>
+                  <div style="margin-top:2px; font-weight:600; color:var(--text-main);">Consultant Physiotherapists: Dr Suhaib &bull; Dr Anand</div>
+                </div>
+              </div>
+            </div>
+            <div class="cinv-doc-info">
+              <div class="cinv-badge-title" style="background:#EFF6FF; color:#1D4ED8; border-color:#BFDBFE;">CONFIDENTIAL CLINICAL SUMMARY</div>
+              <table class="cinv-meta-table">
+                <tr><td><strong>UHID / Record ID:</strong></td><td style="font-weight:800; color:var(--primary);">${escapeHTML(p.id)}</td></tr>
+                <tr><td><strong>Generated On:</strong></td><td>${new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}</td></tr>
+                <tr><td><strong>Registration:</strong></td><td>${formatDateDisplay(p.registrationDate)}</td></tr>
+                <tr><td><strong>File Status:</strong></td><td><strong>${escapeHTML(p.status || 'Active')}</strong></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Patient Demographic & Clinical Profile -->
+          <div class="cinv-patient-card" style="margin-bottom:14px;">
+            <div class="cinv-grid-col">
+              <div><span class="cinv-field-label">Patient Full Name:</span> <span class="cinv-field-val" style="font-size:15px; color:var(--primary);">${escapeHTML(p.fullName)}</span></div>
+              <div><span class="cinv-field-label">Age & Biological Sex:</span> <span class="cinv-field-val">${p.age || '-'} Yrs &bull; ${escapeHTML(p.gender || '-')}</span></div>
+              <div><span class="cinv-field-label">Contact Phone:</span> <span class="cinv-field-val">${escapeHTML(p.phone)} ${p.whatsapp ? `(WA: ${escapeHTML(p.whatsapp)})` : ''}</span></div>
+              <div><span class="cinv-field-label">Residential Address:</span> <span class="cinv-field-val">${escapeHTML(p.address || '-')}</span></div>
+            </div>
+            <div class="cinv-grid-col">
+              <div><span class="cinv-field-label">Primary Consultant:</span> <span class="cinv-field-val" style="color:var(--text-main); font-weight:700;">${escapeHTML(p.assignedDoctor || 'Dr Suhaib')}</span></div>
+              <div><span class="cinv-field-label">Emergency Contact:</span> <span class="cinv-field-val">${escapeHTML(p.emergencyContact || '-')}</span></div>
+              <div><span class="cinv-field-label">Primary Presenting Complaint:</span> <span class="cinv-field-val" style="color:#B91C1C;">${escapeHTML(p.injury || 'Under Clinical Evaluation')}</span></div>
+              <div><span class="cinv-field-label">Billing Ledger Status:</span> <span class="cinv-field-val" style="color:${outstandingDue > 0 ? 'var(--danger)' : 'var(--success)'}; font-weight:700;">${outstandingDue > 0 ? 'Balance Due: ' + formatINR(outstandingDue) : 'All Accounts Settled'}</span></div>
+            </div>
+          </div>
+
+          <!-- Clinical Case History Grid -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:10px 12px; font-size:12px;">
+              <div style="font-weight:700; color:#334155; margin-bottom:4px; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Medical & Surgical History</div>
+              <div style="color:#0F172A; white-space:pre-wrap; line-height:1.4;">${escapeHTML(p.medicalHistory || 'No previous significant surgical or chronic medical history recorded.')}</div>
+            </div>
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:10px 12px; font-size:12px;">
+              <div style="font-weight:700; color:#334155; margin-bottom:4px; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Known Allergies / Precautions</div>
+              <div style="color:${p.allergies ? '#B91C1C' : '#0F172A'}; font-weight:${p.allergies ? '600' : 'normal'}; line-height:1.4;">${escapeHTML(p.allergies || 'No drug or contact allergies reported by patient.')}</div>
+            </div>
+          </div>
+
+          <div style="background:#FAFBFD; border:1px solid #E2E8F0; border-radius:6px; padding:10px 12px; font-size:12px; margin-bottom:18px;">
+            <div style="font-weight:700; color:#334155; margin-bottom:4px; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Physiotherapy Treatment & Protocol Notes</div>
+            <div style="color:#0F172A; white-space:pre-wrap; line-height:1.4;">${escapeHTML(p.treatmentNotes || 'Patient is undergoing structured active functional rehabilitation and therapeutic exercises according to protocol.')}</div>
+          </div>
+
+          <!-- Active Treatment Packages Section -->
+          <div style="margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; color:#334155;">Assigned Treatment Packages</span>
+              <span style="font-size:11px; color:#64748B;">Total Assigned: ${pkgs.length}</span>
+            </div>
+            <table class="cinv-table" style="font-size:12px; margin-bottom:0;">
+              <thead>
+                <tr>
+                  <th style="padding:6px 10px;">Package Name</th>
+                  <th style="padding:6px 10px; text-align:center;">Total</th>
+                  <th style="padding:6px 10px; text-align:center;">Completed</th>
+                  <th style="padding:6px 10px; text-align:center;">Remaining</th>
+                  <th style="padding:6px 10px;">Validity Until</th>
+                  <th style="padding:6px 10px; text-align:center;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${pkgs.length ? pkgs.map(pk => {
+                  const rem = pk.totalSessions - (pk.completedSessions || 0);
+                  return `
+                    <tr>
+                      <td style="padding:6px 10px; font-weight:600;">${escapeHTML(pk.packageName)}</td>
+                      <td style="padding:6px 10px; text-align:center;">${pk.totalSessions}</td>
+                      <td style="padding:6px 10px; text-align:center; color:var(--success); font-weight:700;">${pk.completedSessions || 0}</td>
+                      <td style="padding:6px 10px; text-align:center; font-weight:700; color:${rem > 0 ? 'var(--primary)' : '#64748B'};">${rem}</td>
+                      <td style="padding:6px 10px;">${formatDateDisplay(pk.expiryDate)}</td>
+                      <td style="padding:6px 10px; text-align:center;"><span class="badge ${pk.status === 'Active' ? 'badge-success' : 'badge-neutral'}" style="font-size:10px; padding:2px 8px;">${pk.status}</span></td>
+                    </tr>
+                  `;
+                }).join('') : `<tr><td colspan="6" style="padding:8px; text-align:center; color:#94A3B8;">No treatment packages currently assigned</td></tr>`}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Clinical Appointments & Session Log -->
+          <div style="margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; color:#334155;">Clinical Appointments & Attendance History</span>
+              <span style="font-size:11px; color:#64748B;">Total Visits: ${appointments.length}</span>
+            </div>
+            <table class="cinv-table" style="font-size:12px; margin-bottom:0;">
+              <thead>
+                <tr>
+                  <th style="padding:6px 10px;">Apt ID</th>
+                  <th style="padding:6px 10px;">Date & Time</th>
+                  <th style="padding:6px 10px;">Attending Doctor</th>
+                  <th style="padding:6px 10px;">Service / Modality</th>
+                  <th style="padding:6px 10px; text-align:center;">Status</th>
+                  <th style="padding:6px 10px;">Session Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${appointments.length ? appointments.map(a => `
+                  <tr>
+                    <td style="padding:6px 10px; font-weight:600; color:var(--primary);">${escapeHTML(a.id)}</td>
+                    <td style="padding:6px 10px;">${formatDateDisplay(a.date)} &bull; ${escapeHTML(a.time)}</td>
+                    <td style="padding:6px 10px;">${escapeHTML(a.doctor)}</td>
+                    <td style="padding:6px 10px;">${escapeHTML(a.service)}</td>
+                    <td style="padding:6px 10px; text-align:center;"><span class="badge ${getAptStatusBadge(a.status)}" style="font-size:10px; padding:2px 8px;">${escapeHTML(a.status)}</span></td>
+                    <td style="padding:6px 10px; color:#475569;">${escapeHTML(a.notes || '-')}</td>
+                  </tr>
+                `).join('') : `<tr><td colspan="6" style="padding:8px; text-align:center; color:#94A3B8;">No clinical appointment sessions recorded</td></tr>`}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Billing & Financial Account Ledger -->
+          <div style="margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; color:#334155;">Billing & Settlement Account Ledger</span>
+              <span style="font-size:11.5px; font-weight:700;">Billed: ${formatINR(totalBilled)} &bull; Paid: ${formatINR(totalPaid)} &bull; Due: <span style="color:${outstandingDue > 0 ? 'var(--danger)' : 'var(--success)'};">${formatINR(outstandingDue)}</span></span>
+            </div>
+            <table class="cinv-table" style="font-size:12px; margin-bottom:0;">
+              <thead>
+                <tr>
+                  <th style="padding:6px 10px;">Invoice #</th>
+                  <th style="padding:6px 10px;">Issue Date</th>
+                  <th style="padding:6px 10px; text-align:right;">Total Amount</th>
+                  <th style="padding:6px 10px; text-align:right;">Paid</th>
+                  <th style="padding:6px 10px; text-align:right;">Balance</th>
+                  <th style="padding:6px 10px; text-align:center;">Payment Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${invoices.length ? invoices.map(inv => {
+                  const b = calculateInvoiceBalance(inv);
+                  return `
+                    <tr>
+                      <td style="padding:6px 10px; font-weight:700; color:var(--primary);">${escapeHTML(inv.number)}</td>
+                      <td style="padding:6px 10px;">${formatDateDisplay(inv.date)}</td>
+                      <td style="padding:6px 10px; text-align:right; font-weight:600;">${formatINR(inv.total)}</td>
+                      <td style="padding:6px 10px; text-align:right; color:var(--success); font-weight:600;">${formatINR(inv.paid || 0)}</td>
+                      <td style="padding:6px 10px; text-align:right; font-weight:700; color:${b > 0 ? 'var(--danger)' : 'var(--success)'};">${formatINR(b)}</td>
+                      <td style="padding:6px 10px; text-align:center;"><span class="badge ${getInvoiceBadgeClass(inv.status)}" style="font-size:10px; padding:2px 8px;">${escapeHTML(inv.status)}</span></td>
+                    </tr>
+                  `;
+                }).join('') : `<tr><td colspan="6" style="padding:8px; text-align:center; color:#94A3B8;">No invoices issued for this patient</td></tr>`}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Dual Signatory Lines -->
+          <div class="cinv-signatory-wrap">
+            <div class="cinv-sign-block">
+              <div class="cinv-sign-line"></div>
+              <div class="cinv-sign-label">Patient / Guardian Acknowledgement</div>
+              <div class="cinv-sign-sub">Verified Treatment & History</div>
+            </div>
+            <div class="cinv-sign-block">
+              <div class="cinv-sign-line"></div>
+              <div class="cinv-sign-label">Dr Suhaib / Dr Anand</div>
+              <div class="cinv-sign-sub">Consultant Physiotherapist</div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div style="margin-top:20px; text-align:center; font-size:10.5px; color:#94A3B8; border-top:1px solid #E2E8F0; padding-top:10px;">
+            Functional Rehab Lab &bull; Confidential Medical Record &bull; Indiranagar, Bengaluru &bull; Developed by Namith RN
+          </div>
+        </div>
+      `;
+
+      openModal("patientPrintModal");
     }
 
     // ================= 3. APPOINTMENTS LOGIC =================
@@ -5206,8 +6658,107 @@ service cloud.firestore {
       renderDashboard();
     }
 
-    // View & Print A4 Invoice
-    function viewPrintInvoice(invoiceId) {
+    // --- Amount to Words Conversion (Indian Currency numbering system) ---
+    function amountToWords(num) {
+      const n = Math.round(Number(num) || 0);
+      if (n === 0) return "Zero Rupees Only";
+      if (n < 0) return "Negative " + amountToWords(Math.abs(n));
+
+      const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+        "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+      const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+
+      function convertBelowThousand(val) {
+        let str = "";
+        if (val >= 100) {
+          str += units[Math.floor(val / 100)] + " Hundred ";
+          val %= 100;
+        }
+        if (val >= 20) {
+          str += tens[Math.floor(val / 10)] + " ";
+          val %= 10;
+        }
+        if (val > 0) {
+          str += units[val] + " ";
+        }
+        return str.trim();
+      }
+
+      let crore = Math.floor(n / 10000000);
+      let remainder = n % 10000000;
+      let lakh = Math.floor(remainder / 100000);
+      remainder %= 100000;
+      let thousand = Math.floor(remainder / 1000);
+      let hundredAndBelow = remainder % 1000;
+
+      let result = "";
+      if (crore > 0) result += convertBelowThousand(crore) + " Crore ";
+      if (lakh > 0) result += convertBelowThousand(lakh) + " Lakh ";
+      if (thousand > 0) result += convertBelowThousand(thousand) + " Thousand ";
+      if (hundredAndBelow > 0) result += convertBelowThousand(hundredAndBelow) + " ";
+
+      return (result.trim() + " Rupees Only");
+    }
+
+    // Active invoice modal state
+    let currentActiveInvoiceId = null;
+    let currentInvoicePrintMode = 'a4'; // 'a4' or 'thermal'
+
+    function switchInvoicePrintMode(mode) {
+      currentInvoicePrintMode = mode;
+      const btnA4 = document.getElementById("btnInvModeA4");
+      const btnThermal = document.getElementById("btnInvModeThermal");
+      const modalDocTitle = document.getElementById("invModalDocTitle");
+      const modalSubTitle = document.getElementById("invModalSubTitle");
+
+      if (btnA4 && btnThermal) {
+        if (mode === 'thermal') {
+          btnThermal.style.background = "#fff";
+          btnThermal.style.color = "var(--text-main)";
+          btnThermal.style.fontWeight = "700";
+          btnThermal.style.boxShadow = "0 1px 3px rgba(0,0,0,0.06)";
+
+          btnA4.style.background = "transparent";
+          btnA4.style.color = "var(--text-secondary)";
+          btnA4.style.fontWeight = "normal";
+          btnA4.style.boxShadow = "none";
+
+          if (modalDocTitle) modalDocTitle.textContent = "Counter Thermal Receipt (80mm)";
+          if (modalSubTitle) modalSubTitle.textContent = "Optimized for thermal POS receipt printers";
+        } else {
+          btnA4.style.background = "#fff";
+          btnA4.style.color = "var(--text-main)";
+          btnA4.style.fontWeight = "700";
+          btnA4.style.boxShadow = "0 1px 3px rgba(0,0,0,0.06)";
+
+          btnThermal.style.background = "transparent";
+          btnThermal.style.color = "var(--text-secondary)";
+          btnThermal.style.fontWeight = "normal";
+          btnThermal.style.boxShadow = "none";
+
+          if (modalDocTitle) modalDocTitle.textContent = "Clinical Invoice & Receipt (A4)";
+          if (modalSubTitle) modalSubTitle.textContent = "Official clinical letterhead with verification stamp";
+        }
+      }
+
+      if (currentActiveInvoiceId) {
+        renderInvoicePrintDocument(currentActiveInvoiceId, mode);
+      }
+    }
+
+    function printActiveInvoiceDocument() {
+      window.print();
+    }
+
+    // View & Print Invoice (renders A4 Letterhead or 80mm Thermal Mode)
+    function viewPrintInvoice(invoiceId, mode = 'a4') {
+      currentActiveInvoiceId = invoiceId;
+      currentInvoicePrintMode = mode;
+      switchInvoicePrintMode(mode);
+      openModal("invoicePrintModal");
+    }
+
+    function renderInvoicePrintDocument(invoiceId, mode = 'a4') {
       const invoices = getStoredData(STORAGE_KEYS.invoices, []);
       const inv = invoices.find(i => i.id === invoiceId);
       if (!inv) return;
@@ -5215,131 +6766,298 @@ service cloud.firestore {
       const settings = getStoredData(STORAGE_KEYS.settings, {});
       const centreName = settings.centreName || "Functional Rehab Lab";
       const logoUrl = settings.logoUrl || ASSETS.logo;
-      const bal = calculateInvoiceBalance(inv);
+      const clinicAddress = settings.clinicAddress || "1st Floor, 100ft Road, Indiranagar, Bengaluru, Karnataka - 560038";
+      const clinicPhone = settings.clinicPhone || "+91 98765 43210";
+      const clinicEmail = settings.clinicEmail || "contact@functionalrehablab.com";
+      const clinicUpiId = settings.clinicUpiId || "functionalrehablab@upi";
+      const clinicGst = settings.clinicGst || "";
 
-      document.getElementById("btnInvWhatsAppShare").onclick = () => promptInvoiceWhatsApp(inv);
+      const bal = calculateInvoiceBalance(inv);
+      const isPaid = (bal <= 0);
+
+      // Connect WhatsApp share button
+      const btnShare = document.getElementById("btnInvWhatsAppShare");
+      if (btnShare) {
+        btnShare.onclick = () => promptInvoiceWhatsApp(inv);
+      }
 
       const printContainer = document.getElementById("invoicePrintContent");
-      printContainer.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid var(--primary); padding-bottom:16px; margin-bottom:20px;">
-          <div style="display:flex; align-items:center; gap:14px;">
-            <img src="${logoUrl}" alt="Logo" style="width:50px; height:50px; border-radius:6px; object-fit:cover;" onerror="this.style.display='none'">
-            <div>
-              <h2 style="font-size:22px; font-weight:800; color:var(--text-main); line-height:1.2;">${escapeHTML(centreName)}</h2>
-              <p style="font-size:12px; color:var(--text-secondary);">Advanced Physiotherapy & Functional Movement Rehabilitation</p>
+      if (!printContainer) return;
+
+      // Find patient details for doctor / phone
+      const patients = getStoredData(STORAGE_KEYS.patients, []);
+      const p = patients.find(item => item.id === inv.patientId);
+      const assignedDoctor = (p && p.assignedDoctor) ? p.assignedDoctor : "Dr Suhaib / Dr Anand";
+      const patientPhone = inv.patientPhone || (p && p.phone) || "-";
+      const patientInjury = (p && p.injury) ? p.injury : "-";
+
+      if (mode === 'thermal') {
+        // --- 80mm Counter Slip Mode ---
+        printContainer.innerHTML = `
+          <div class="clinical-thermal-slip">
+            <div class="thermal-title">${escapeHTML(centreName)}</div>
+            <div class="thermal-center" style="font-size:10.5px; margin-top:2px;">PHYSIOTHERAPY & REHABILITATION</div>
+            <div class="thermal-center" style="font-size:10px; margin-top:2px;">${escapeHTML(clinicAddress)}</div>
+            <div class="thermal-center" style="font-size:10px;">Ph: ${escapeHTML(clinicPhone)}</div>
+            ${clinicGst ? `<div class="thermal-center" style="font-size:10px;">GSTIN: ${escapeHTML(clinicGst)}</div>` : ''}
+
+            <div class="thermal-divider"></div>
+            <div class="thermal-center" style="font-weight:bold; font-size:12px; letter-spacing:0.5px;">OFFICIAL RECEIPT</div>
+            <div class="thermal-divider"></div>
+
+            <div class="thermal-row"><span>Inv No:</span> <strong>${escapeHTML(inv.number)}</strong></div>
+            <div class="thermal-row"><span>Date:</span> <span>${formatDateDisplay(inv.date)}</span></div>
+            <div class="thermal-row"><span>UHID:</span> <strong>${escapeHTML(inv.patientId)}</strong></div>
+            <div class="thermal-row"><span>Patient:</span> <strong>${escapeHTML(inv.patientName)}</strong></div>
+            <div class="thermal-row"><span>Doctor:</span> <span>${escapeHTML(assignedDoctor)}</span></div>
+
+            <div class="thermal-divider"></div>
+            <div class="thermal-row" style="font-weight:bold; font-size:10.5px;">
+              <span>DESCRIPTION</span>
+              <span>AMOUNT</span>
             </div>
-          </div>
-          <div style="text-align:right;">
-            <h3 style="font-size:20px; font-weight:700; color:var(--primary);">INVOICE</h3>
-            <div style="font-weight:700; font-size:14px;">${escapeHTML(inv.number)}</div>
-            <div style="font-size:12px; color:var(--text-secondary);">Date: ${formatDateDisplay(inv.date)}</div>
-            <div style="font-size:12px; color:var(--text-secondary);">Due Date: ${formatDateDisplay(inv.dueDate)}</div>
-          </div>
-        </div>
+            <div class="thermal-divider"></div>
 
-        <div style="display:flex; justify-content:space-between; margin-bottom:24px; font-size:13px;">
-          <div>
-            <span style="font-size:11px; text-transform:uppercase; color:var(--text-secondary); font-weight:700;">Billed To:</span>
-            <div style="font-size:15px; font-weight:700; color:var(--text-main); margin-top:2px;">${escapeHTML(inv.patientName)}</div>
-            <div>Patient ID: ${escapeHTML(inv.patientId)}</div>
-            <div>Phone: ${escapeHTML(inv.patientPhone || '-')}</div>
-          </div>
-          <div style="text-align:right;">
-            <span style="font-size:11px; text-transform:uppercase; color:var(--text-secondary); font-weight:700;">Payment Status:</span>
-            <div style="margin-top:4px;"><span class="badge ${getInvoiceBadgeClass(inv.status)}" style="font-size:13px; padding:4px 12px;">${inv.status}</span></div>
-          </div>
-        </div>
-
-        <table style="width:100%; margin-bottom:20px;">
-          <thead>
-            <tr>
-              <th style="padding:10px 14px; border-bottom:2px solid var(--border); font-size:12px;">Item & Service Description</th>
-              <th style="padding:10px 14px; border-bottom:2px solid var(--border); font-size:12px; width:80px; text-align:center;">Qty</th>
-              <th style="padding:10px 14px; border-bottom:2px solid var(--border); font-size:12px; width:120px; text-align:right;">Unit Price</th>
-              <th style="padding:10px 14px; border-bottom:2px solid var(--border); font-size:12px; width:120px; text-align:right;">Total</th>
-            </tr>
-          </thead>
-          <tbody>
             ${(inv.items || []).map(item => `
-              <tr>
-                <td style="padding:10px 14px; border-bottom:1px solid var(--border);">${escapeHTML(item.description)}</td>
-                <td style="padding:10px 14px; border-bottom:1px solid var(--border); text-align:center;">${item.quantity}</td>
-                <td style="padding:10px 14px; border-bottom:1px solid var(--border); text-align:right;">${formatINR(item.unitPrice)}</td>
-                <td style="padding:10px 14px; border-bottom:1px solid var(--border); text-align:right; font-weight:600;">${formatINR(item.quantity * item.unitPrice)}</td>
-              </tr>
+              <div style="margin-bottom:3px;">
+                <div style="font-weight:bold;">${escapeHTML(item.description)}</div>
+                <div class="thermal-row" style="padding-left:8px; font-size:10.5px;">
+                  <span>${item.quantity} x ${formatINR(item.unitPrice)}</span>
+                  <span>${formatINR(item.quantity * item.unitPrice)}</span>
+                </div>
+              </div>
             `).join('')}
-          </tbody>
-        </table>
 
-        <div style="display:flex; justify-content:space-between; margin-bottom:24px;">
-          <div style="max-width:300px; font-size:12px; color:var(--text-secondary);">
-            <strong>Notes / Terms:</strong>
-            <p>${escapeHTML(inv.notes || 'Thank you for choosing Functional Rehab Lab for your recovery.')}</p>
-          </div>
-          <div style="width:260px; font-size:13px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-              <span>Subtotal:</span>
-              <strong>${formatINR(inv.subtotal || inv.total)}</strong>
+            <div class="thermal-divider"></div>
+            <div class="thermal-row"><span>Subtotal:</span> <span>${formatINR(inv.subtotal || inv.total)}</span></div>
+            ${inv.discount ? `<div class="thermal-row"><span>Discount:</span> <span>&minus;${formatINR(inv.discount)}</span></div>` : ''}
+            ${inv.taxPercent ? `<div class="thermal-row"><span>Tax (${inv.taxPercent}%):</span> <span>${formatINR(((inv.subtotal - inv.discount) * inv.taxPercent)/100)}</span></div>` : ''}
+            <div class="thermal-row" style="font-size:13px; font-weight:bold; margin-top:3px;">
+              <span>TOTAL:</span>
+              <span>${formatINR(inv.total)}</span>
             </div>
-            ${inv.discount ? `
-              <div style="display:flex; justify-content:space-between; margin-bottom:6px; color:var(--danger);">
-                <span>Discount:</span>
-                <span>&minus;${formatINR(inv.discount)}</span>
-              </div>
-            ` : ''}
-            ${inv.taxPercent ? `
-              <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                <span>Tax (${inv.taxPercent}%):</span>
-                <span>${formatINR(((inv.subtotal - inv.discount) * inv.taxPercent)/100)}</span>
-              </div>
-            ` : ''}
-            <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:6px; margin-top:6px; font-size:16px;">
-              <strong>Total Amount:</strong>
-              <strong style="color:var(--primary);">${formatINR(inv.total)}</strong>
+            <div class="thermal-row" style="font-weight:bold; margin-top:2px;">
+              <span>PAID:</span>
+              <span>${formatINR(inv.paid || 0)}</span>
             </div>
-            <div style="display:flex; justify-content:space-between; margin-top:6px; color:var(--success);">
-              <span>Paid to Date:</span>
-              <strong>${formatINR(inv.paid || 0)}</strong>
+            <div class="thermal-row" style="font-weight:bold; font-size:12px; margin-top:2px;">
+              <span>BALANCE DUE:</span>
+              <span>${formatINR(bal)}</span>
             </div>
-            <div style="display:flex; justify-content:space-between; border-top:2px solid var(--border); padding-top:6px; margin-top:6px; font-size:15px; font-weight:700;">
-              <span>Balance Due:</span>
-              <span style="color:${bal > 0 ? 'var(--danger)' : 'var(--success)'};">${formatINR(bal)}</span>
+            <div class="thermal-row" style="margin-top:2px;">
+              <span>STATUS:</span>
+              <strong>${inv.status}</strong>
             </div>
-          </div>
-        </div>
 
-        ${(inv.payments && inv.payments.length > 0) ? `
-          <div style="margin-top:20px; border-top:1px dashed var(--border); padding-top:14px;">
-            <h4 style="font-size:13px; font-weight:700; margin-bottom:8px;">Payment Transaction History</h4>
-            <table style="width:100%; font-size:12px;">
-              <thead>
+            ${(inv.payments && inv.payments.length > 0) ? `
+              <div class="thermal-divider"></div>
+              <div style="font-weight:bold; font-size:10.5px; margin-bottom:2px;">PAYMENT TRANSACTIONS:</div>
+              ${inv.payments.map(p => `
+                <div class="thermal-row" style="font-size:10px;">
+                  <span>${formatDateDisplay(p.date)} (${escapeHTML(p.method)})</span>
+                  <span>${formatINR(p.amount)}</span>
+                </div>
+              `).join('')}
+            ` : ''}
+
+            <div class="thermal-divider"></div>
+            <div class="thermal-center" style="font-size:9.5px; margin-top:6px;">
+              ${bal > 0 ? `Pay UPI: ${escapeHTML(clinicUpiId)}<br>` : ''}
+              Thank you for trusting Functional Rehab Lab.<br>
+              Wishing you a speedy recovery!<br>
+              Developer: Namith RN
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // --- Default A4 Official Clinical Letterhead Mode ---
+      const amountWords = amountToWords(inv.total);
+
+      printContainer.innerHTML = `
+        <div class="clinical-invoice-doc">
+          <!-- Letterhead Header -->
+          <div class="cinv-header">
+            <div class="cinv-brand-box">
+              <img src="${logoUrl}" alt="${escapeHTML(centreName)}" class="cinv-logo" onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'width:58px;height:58px;background:var(--primary);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;\\'>FRL</div>';">
+              <div>
+                <h2 class="cinv-clinic-name">${escapeHTML(centreName)}</h2>
+                <div class="cinv-clinic-subtitle">Advanced Physiotherapy, Orthopaedic & Sports Rehabilitation</div>
+                <div class="cinv-clinic-contact">
+                  <div>${escapeHTML(clinicAddress)}</div>
+                  <div>Phone: <strong>${escapeHTML(clinicPhone)}</strong> &bull; Email: ${escapeHTML(clinicEmail)}</div>
+                  ${clinicGst ? `<div>GSTIN: <strong>${escapeHTML(clinicGst)}</strong></div>` : ''}
+                  <div style="margin-top:3px; font-weight:600; color:var(--text-main);">Consultant Physiotherapists: Dr Suhaib &bull; Dr Anand</div>
+                </div>
+              </div>
+            </div>
+            <div class="cinv-doc-info">
+              <div class="cinv-badge-title">OFFICIAL CLINICAL RECEIPT</div>
+              <table class="cinv-meta-table">
+                <tr><td><strong>Invoice No:</strong></td><td style="font-weight:800; color:var(--primary);">${escapeHTML(inv.number)}</td></tr>
+                <tr><td><strong>Invoice Date:</strong></td><td>${formatDateDisplay(inv.date)}</td></tr>
+                <tr><td><strong>Due Date:</strong></td><td>${formatDateDisplay(inv.dueDate)}</td></tr>
+                <tr><td><strong>Payment Status:</strong></td><td><span class="badge ${getInvoiceBadgeClass(inv.status)}" style="font-size:11px; padding:3px 9px;">${inv.status}</span></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Patient Demographics Card -->
+          <div class="cinv-patient-card">
+            <div class="cinv-grid-col">
+              <div><span class="cinv-field-label">Patient Full Name:</span> <span class="cinv-field-val" style="font-size:14.5px; color:var(--text-main); font-weight:700;">${escapeHTML(inv.patientName)}</span></div>
+              <div><span class="cinv-field-label">Patient UHID / ID:</span> <span class="cinv-field-val" style="color:var(--primary); font-weight:700;">${escapeHTML(inv.patientId)}</span></div>
+              <div><span class="cinv-field-label">Contact Phone:</span> <span class="cinv-field-val">${escapeHTML(patientPhone)}</span></div>
+            </div>
+            <div class="cinv-grid-col">
+              <div><span class="cinv-field-label">Treating Consultant:</span> <span class="cinv-field-val" style="color:var(--text-main); font-weight:700;">${escapeHTML(assignedDoctor)}</span></div>
+              <div><span class="cinv-field-label">Clinical Indication:</span> <span class="cinv-field-val">${escapeHTML(patientInjury)}</span></div>
+              <div><span class="cinv-field-label">Place of Service:</span> <span class="cinv-field-val">Outpatient Rehabilitation Clinic</span></div>
+            </div>
+          </div>
+
+          <!-- Itemized Table -->
+          <table class="cinv-table">
+            <thead>
+              <tr>
+                <th style="width:40px; text-align:center;">#</th>
+                <th>Clinical Service / Procedure Description</th>
+                <th style="width:70px; text-align:center;">Qty</th>
+                <th style="width:130px; text-align:right;">Rate (INR)</th>
+                <th style="width:130px; text-align:right;">Amount (INR)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${(inv.items || []).map((item, idx) => `
                 <tr>
-                  <th style="padding:6px 0; text-align:left;">Date</th>
-                  <th style="padding:6px 0; text-align:left;">Method</th>
-                  <th style="padding:6px 0; text-align:left;">Ref / Notes</th>
-                  <th style="padding:6px 0; text-align:right;">Amount</th>
+                  <td style="text-align:center; color:#64748B;">${idx + 1}</td>
+                  <td>
+                    <div style="font-weight:600; color:#0F172A;">${escapeHTML(item.description)}</div>
+                    <div style="font-size:11px; color:#64748B;">Physiotherapy Assessment & Therapeutic Intervention</div>
+                  </td>
+                  <td style="text-align:center; font-weight:600;">${item.quantity}</td>
+                  <td style="text-align:right;">${formatINR(item.unitPrice)}</td>
+                  <td style="text-align:right; font-weight:700;">${formatINR(item.quantity * item.unitPrice)}</td>
                 </tr>
-              </thead>
-              <tbody>
-                ${inv.payments.map(p => `
-                  <tr>
-                    <td style="padding:4px 0;">${formatDateDisplay(p.date)}</td>
-                    <td style="padding:4px 0;">${escapeHTML(p.method)}</td>
-                    <td style="padding:4px 0;">${escapeHTML(p.notes || '-')}</td>
-                    <td style="padding:4px 0; text-align:right; font-weight:600; color:var(--success);">${formatINR(p.amount)}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        ` : ''}
+              `).join('')}
+            </tbody>
+          </table>
 
-        <div style="margin-top:40px; text-align:center; font-size:11px; color:var(--text-secondary); border-top:1px solid var(--border); padding-top:14px;">
-          Functional Rehab Lab &bull; Physiotherapy & Movement Science &bull; Developer: Namith RN
+          <!-- Summary, Amount in Words & Totals -->
+          <div class="cinv-summary-grid">
+            <div class="cinv-notes-col">
+              <div class="cinv-words-box">
+                <span class="cinv-field-label" style="display:block; margin-bottom:2px;">Amount in Words:</span>
+                <strong style="color:#0F172A;">${escapeHTML(amountWords)}</strong>
+              </div>
+
+              ${isPaid ? `
+                <div class="cinv-stamp-seal">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>OFFICIALLY PAID & SETTLED</span>
+                </div>
+              ` : `
+                <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border:1.5px solid #F87171; border-radius:6px; color:#B91C1C; font-size:11px; font-weight:700; background:#FEF2F2;">
+                  <span>OUTSTANDING BALANCE DUE: ${formatINR(bal)}</span>
+                </div>
+              `}
+
+              ${bal > 0 ? `
+                <div class="cinv-upi-box">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary); flex-shrink:0;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                  <div>
+                    <div style="font-weight:700; color:#0F172A;">Instant UPI Settlement</div>
+                    <div style="color:#64748B;">UPI ID: <strong style="color:var(--primary);">${escapeHTML(clinicUpiId)}</strong></div>
+                  </div>
+                </div>
+              ` : ''}
+
+              <div style="margin-top:10px; font-size:11.5px; color:#64748B;">
+                <strong>Clinical Notes & Advice:</strong>
+                <p style="margin-top:2px; line-height:1.4;">${escapeHTML(inv.notes || 'Please adhere to your prescribed home exercise protocol. Follow up as scheduled by your physiotherapist.')}</p>
+              </div>
+            </div>
+
+            <div class="cinv-totals-box">
+              <div class="cinv-total-row">
+                <span>Gross Subtotal:</span>
+                <strong style="color:#0F172A;">${formatINR(inv.subtotal || inv.total)}</strong>
+              </div>
+              ${inv.discount ? `
+                <div class="cinv-total-row" style="color:#DC2626;">
+                  <span>Privilege Discount:</span>
+                  <span>&minus;${formatINR(inv.discount)}</span>
+                </div>
+              ` : ''}
+              ${inv.taxPercent ? `
+                <div class="cinv-total-row">
+                  <span>Applicable Tax (${inv.taxPercent}%):</span>
+                  <span>${formatINR(((inv.subtotal - inv.discount) * inv.taxPercent)/100)}</span>
+                </div>
+              ` : ''}
+              <div class="cinv-grand-row">
+                <span>Grand Total:</span>
+                <span>${formatINR(inv.total)}</span>
+              </div>
+              <div class="cinv-total-row" style="margin-top:6px; color:#059669; font-weight:700;">
+                <span>Total Paid:</span>
+                <span>${formatINR(inv.paid || 0)}</span>
+              </div>
+              <div class="cinv-balance-row" style="color:${bal > 0 ? '#DC2626' : '#059669'};">
+                <span>Balance Due:</span>
+                <span>${formatINR(bal)}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Transactions Ledger -->
+          ${(inv.payments && inv.payments.length > 0) ? `
+            <div style="margin-top:12px; margin-bottom:16px;">
+              <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:#64748B; margin-bottom:4px;">Recorded Payment Transactions</div>
+              <table class="cinv-table" style="font-size:11.5px; margin-bottom:0;">
+                <thead>
+                  <tr>
+                    <th style="padding:5px 8px;">Date</th>
+                    <th style="padding:5px 8px;">Payment Method</th>
+                    <th style="padding:5px 8px;">Transaction Ref / Remarks</th>
+                    <th style="padding:5px 8px; text-align:right;">Amount (INR)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${inv.payments.map(p => `
+                    <tr>
+                      <td style="padding:5px 8px;">${formatDateDisplay(p.date)}</td>
+                      <td style="padding:5px 8px; font-weight:600;">${escapeHTML(p.method)}</td>
+                      <td style="padding:5px 8px; color:#64748B;">${escapeHTML(p.notes || '-')}</td>
+                      <td style="padding:5px 8px; text-align:right; font-weight:700; color:#059669;">${formatINR(p.amount)}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          ` : ''}
+
+          <!-- Dual Clinical Signatory Lines -->
+          <div class="cinv-signatory-wrap">
+            <div class="cinv-sign-block">
+              <div class="cinv-sign-line"></div>
+              <div class="cinv-sign-label">Patient / Guardian Signature</div>
+              <div class="cinv-sign-sub">Received Services in Full</div>
+            </div>
+            <div class="cinv-sign-block">
+              <div class="cinv-sign-line"></div>
+              <div class="cinv-sign-label">Dr Suhaib / Dr Anand</div>
+              <div class="cinv-sign-sub">Authorized Consultant Physiotherapist</div>
+            </div>
+          </div>
+
+          <!-- Bottom Footer -->
+          <div style="margin-top:20px; text-align:center; font-size:10.5px; color:#94A3B8; border-top:1px solid #E2E8F0; padding-top:10px;">
+            Functional Rehab Lab &bull; Indiranagar, Bengaluru &bull; Developed by Namith RN &bull; Computer Generated Medical Invoice
+          </div>
         </div>
       `;
-
-      openModal("invoicePrintModal");
     }
 
     // ================= 5. TREATMENT PACKAGE MANAGEMENT =================
@@ -6018,6 +7736,18 @@ service cloud.firestore {
       document.getElementById("setInvoicePrefix").value = settings.invoicePrefix || "FRL-INV-";
       document.getElementById("setPatientPrefix").value = settings.patientPrefix || "FRL-P-";
 
+      if (document.getElementById("setClinicAddress")) document.getElementById("setClinicAddress").value = settings.clinicAddress || "1st Floor, 100ft Road, Indiranagar, Bengaluru, Karnataka - 560038";
+      if (document.getElementById("setClinicPhone")) document.getElementById("setClinicPhone").value = settings.clinicPhone || "+91 98765 43210";
+      if (document.getElementById("setClinicEmail")) document.getElementById("setClinicEmail").value = settings.clinicEmail || "contact@functionalrehablab.com";
+      if (document.getElementById("setClinicUpiId")) document.getElementById("setClinicUpiId").value = settings.clinicUpiId || "functionalrehablab@upi";
+      if (document.getElementById("setClinicGst")) document.getElementById("setClinicGst").value = settings.clinicGst || "";
+
+      if (document.getElementById("setAdmissionAutoInvoice")) document.getElementById("setAdmissionAutoInvoice").checked = (settings.admissionAutoInvoice !== false);
+      if (document.getElementById("setAdmissionFeeAmount")) document.getElementById("setAdmissionFeeAmount").value = (settings.admissionFeeAmount !== undefined) ? settings.admissionFeeAmount : 500;
+      if (document.getElementById("setAdmissionFeeDesc")) document.getElementById("setAdmissionFeeDesc").value = settings.admissionFeeDesc || "Registration & Initial Clinical Assessment / Consultation Fee";
+      if (document.getElementById("setAdmissionPaymentStatus")) document.getElementById("setAdmissionPaymentStatus").value = settings.admissionPaymentStatus || "Paid";
+      if (document.getElementById("setAdmissionPaymentMode")) document.getElementById("setAdmissionPaymentMode").value = settings.admissionPaymentMode || "UPI";
+
       const templates = settings.templates || DEFAULT_TEMPLATES;
       document.getElementById("tmplWelcome").value = templates.welcome || DEFAULT_TEMPLATES.welcome;
       document.getElementById("tmplAptConfirm").value = templates.aptConfirm || DEFAULT_TEMPLATES.aptConfirm;
@@ -6034,7 +7764,17 @@ service cloud.firestore {
         logoUrl: document.getElementById("setLogoUrl").value.trim() || ASSETS.logo,
         defaultDuration: Number(document.getElementById("setDefaultAptDuration").value) || 45,
         invoicePrefix: document.getElementById("setInvoicePrefix").value.trim() || "FRL-INV-",
-        patientPrefix: document.getElementById("setPatientPrefix").value.trim() || "FRL-P-"
+        patientPrefix: document.getElementById("setPatientPrefix").value.trim() || "FRL-P-",
+        clinicAddress: document.getElementById("setClinicAddress")?.value.trim() || "1st Floor, 100ft Road, Indiranagar, Bengaluru, Karnataka - 560038",
+        clinicPhone: document.getElementById("setClinicPhone")?.value.trim() || "+91 98765 43210",
+        clinicEmail: document.getElementById("setClinicEmail")?.value.trim() || "contact@functionalrehablab.com",
+        clinicUpiId: document.getElementById("setClinicUpiId")?.value.trim() || "functionalrehablab@upi",
+        clinicGst: document.getElementById("setClinicGst")?.value.trim() || "",
+        admissionAutoInvoice: document.getElementById("setAdmissionAutoInvoice")?.checked ?? true,
+        admissionFeeAmount: Math.max(0, Number(document.getElementById("setAdmissionFeeAmount")?.value) || 500),
+        admissionFeeDesc: document.getElementById("setAdmissionFeeDesc")?.value.trim() || "Registration & Initial Clinical Assessment / Consultation Fee",
+        admissionPaymentStatus: document.getElementById("setAdmissionPaymentStatus")?.value || "Paid",
+        admissionPaymentMode: document.getElementById("setAdmissionPaymentMode")?.value || "UPI"
       };
       setStoredData(STORAGE_KEYS.settings, updated);
       showToast("Settings updated successfully");
@@ -6251,17 +7991,27 @@ service cloud.firestore {
     function updateSidebarBadges() {
       const patients = getStoredData(STORAGE_KEYS.patients, []).filter(p => p.status === 'Active');
       const bPatient = document.getElementById("badgePatientCount");
+      const mbPatient = document.getElementById("mobileBadgePatients");
       if (bPatient) {
         bPatient.textContent = patients.length;
         bPatient.style.display = patients.length ? "inline-block" : "none";
+      }
+      if (mbPatient) {
+        mbPatient.textContent = patients.length;
+        mbPatient.style.display = patients.length ? "inline-block" : "none";
       }
 
       const today = getTodayYMD();
       const todayApts = getStoredData(STORAGE_KEYS.appointments, []).filter(a => a.date === today && a.status === 'Scheduled');
       const bApt = document.getElementById("badgeTodayApt");
+      const mbApt = document.getElementById("mobileBadgeApts");
       if (bApt) {
         bApt.textContent = todayApts.length;
         bApt.style.display = todayApts.length ? "inline-block" : "none";
+      }
+      if (mbApt) {
+        mbApt.textContent = todayApts.length;
+        mbApt.style.display = todayApts.length ? "inline-block" : "none";
       }
     }
 
@@ -6271,6 +8021,27 @@ service cloud.firestore {
       const logoBox = document.getElementById("sidebarLogoContainer");
       if (logoBox) {
         logoBox.innerHTML = `<img src="${logoUrl}" alt="FRL Logo" onerror="this.onerror=null; this.parentElement.innerHTML='<span>FRL</span>';">`;
+      }
+    }
+
+    function initDefaultSettingsIfEmpty() {
+      const current = getStoredData(STORAGE_KEYS.settings, null);
+      let updated = current || {};
+      let changed = false;
+
+      if (!updated.centreName) { updated.centreName = "Functional Rehab Lab"; changed = true; }
+      if (!updated.clinicAddress) { updated.clinicAddress = "1st Floor, 100ft Road, Indiranagar, Bengaluru, Karnataka - 560038"; changed = true; }
+      if (!updated.clinicPhone) { updated.clinicPhone = "+91 98765 43210"; changed = true; }
+      if (!updated.clinicEmail) { updated.clinicEmail = "contact@functionalrehablab.com"; changed = true; }
+      if (!updated.clinicUpiId) { updated.clinicUpiId = "functionalrehablab@upi"; changed = true; }
+      if (updated.admissionAutoInvoice === undefined) { updated.admissionAutoInvoice = true; changed = true; }
+      if (updated.admissionFeeAmount === undefined) { updated.admissionFeeAmount = 500; changed = true; }
+      if (!updated.admissionFeeDesc) { updated.admissionFeeDesc = "Registration & Initial Clinical Assessment / Consultation Fee"; changed = true; }
+      if (!updated.admissionPaymentStatus) { updated.admissionPaymentStatus = "Paid"; changed = true; }
+      if (!updated.admissionPaymentMode) { updated.admissionPaymentMode = "UPI"; changed = true; }
+
+      if (changed) {
+        setStoredData(STORAGE_KEYS.settings, updated);
       }
     }
 
@@ -6555,6 +8326,7 @@ service cloud.firestore {
       const dateOptions = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' };
       document.getElementById("headerLiveDate").textContent = new Date().toLocaleDateString('en-IN', dateOptions);
 
+      initDefaultSettingsIfEmpty();
       initBranding();
       initDefaultPackageTemplatesIfEmpty();
       renderDashboard();
