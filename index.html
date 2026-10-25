@@ -1902,6 +1902,7 @@
       getDocs, 
       collection, 
       deleteDoc, 
+      writeBatch,
       onSnapshot 
     } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
@@ -1993,6 +1994,32 @@
         const docRef = doc(db, colName, String(id));
         await deleteDoc(docRef);
         return true;
+      },
+
+      // Delete all documents in a Firestore collection in batches
+      async clearCollection(colName) {
+        if (!db) throw new Error("Firestore is not initialized");
+        const snap = await getDocs(collection(db, colName));
+        if (snap.empty) return 0;
+        
+        let batch = writeBatch(db);
+        let count = 0;
+        let total = 0;
+
+        for (const docSnap of snap.docs) {
+          batch.delete(docSnap.ref);
+          count++;
+          total++;
+          if (count >= 400) {
+            await batch.commit();
+            batch = writeBatch(db);
+            count = 0;
+          }
+        }
+        if (count > 0) {
+          await batch.commit();
+        }
+        return total;
       },
 
       async fetchCollection(colName) {
@@ -2237,7 +2264,7 @@
             </div>
             <div class="metric-value" id="dashTotalPatients">0</div>
             <div class="metric-footer">
-              <span id="dashArchivedCount">0 archived</span> &bull; <span>Click to view</span>
+              <span id="dashArchivedCount">0 inactive</span> &bull; <span>Click to view</span>
             </div>
           </div>
 
@@ -2373,8 +2400,8 @@
             </select>
             <select class="form-control" style="width: auto;" id="patientStatusFilter" onchange="renderPatientsTable()">
               <option value="Active">Active Patients</option>
-              <option value="Archived">Archived Patients</option>
-              <option value="All">All Statuses</option>
+              <option value="Inactive">Inactive Patients</option>
+              <option value="All">All Patients (Active & Inactive)</option>
             </select>
           </div>
           <div class="toolbar-right">
@@ -2676,12 +2703,16 @@
                 <option value="custom">Custom Date Range</option>
               </select>
               <div id="reportCustomDates" style="display: none; align-items: center; gap: 6px;">
-                <input type="date" class="form-control" id="reportStartDate" style="width: auto;">
+                <input type="date" class="form-control" id="reportStartDate" style="width: auto;" onchange="generateReports()">
                 <span>to</span>
-                <input type="date" class="form-control" id="reportEndDate" style="width: auto;">
+                <input type="date" class="form-control" id="reportEndDate" style="width: auto;" onchange="generateReports()">
                 <button class="btn btn-secondary btn-sm" onclick="generateReports()">Apply</button>
               </div>
-              <button class="btn btn-secondary" onclick="exportFinancialReportCSV()">
+              <button class="btn btn-primary btn-sm" onclick="generateReports()" title="Refresh live calculations">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                <span>Refresh</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="exportFinancialReportCSV()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 <span>Export Summary CSV</span>
               </button>
@@ -2715,14 +2746,18 @@
 
         <div class="grid-2">
           <div class="card">
-            <h3 class="card-title" style="margin-bottom: 14px;">Collections by Doctor</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <h3 class="card-title" style="margin:0;">Performance & Revenue by Doctor</h3>
+              <span style="font-size:11.5px; color:var(--text-secondary);">Direct Sessions & Attributed Collections</span>
+            </div>
             <div class="table-container">
               <table>
                 <thead>
                   <tr>
-                    <th>Doctor</th>
-                    <th>Sessions</th>
-                    <th>Invoiced Revenue</th>
+                    <th>Consultant Doctor</th>
+                    <th>Conducted Sessions</th>
+                    <th>Attributed Revenue</th>
+                    <th style="text-align:right;">Action</th>
                   </tr>
                 </thead>
                 <tbody id="repDoctorRevenueBody"></tbody>
@@ -2731,7 +2766,10 @@
           </div>
 
           <div class="card">
-            <h3 class="card-title" style="margin-bottom: 14px;">Outstanding & Overdue Invoices</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <h3 class="card-title" style="margin:0;">Outstanding & Overdue Invoices</h3>
+              <span style="font-size:11.5px; color:var(--text-secondary);">Click any invoice to view or record payment</span>
+            </div>
             <div class="table-container">
               <table>
                 <thead>
@@ -2739,7 +2777,8 @@
                     <th>Invoice</th>
                     <th>Patient</th>
                     <th>Due Date</th>
-                    <th>Pending</th>
+                    <th>Pending Balance</th>
+                    <th style="text-align:right;">Action</th>
                   </tr>
                 </thead>
                 <tbody id="repOutstandingInvoicesBody"></tbody>
@@ -2969,10 +3008,10 @@
               </div>
             </div>
 
-<div style="border-top: 1px solid var(--border); padding-top: 16px;">
-              <h4 style="font-size: 13.5px; font-weight: 700; color: var(--danger); margin-bottom: 6px;">Danger Zone: Manual Reset</h4>
-              <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Permanently wipe all records from this browser's LocalStorage. This action cannot be undone unless you have a backup.</p>
-              <button class="btn btn-danger btn-sm" onclick="openResetConfirmModal()">Reset Application Database</button>
+            <div style="border-top: 1px solid var(--border); padding-top: 16px;">
+              <h4 style="font-size: 13.5px; font-weight: 700; color: var(--danger); margin-bottom: 6px;">Danger Zone: Complete Application & Cloud Reset</h4>
+              <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Permanently wipe all records from this browser's LocalStorage and optionally export the reset to Firebase Cloud Firestore. This action cannot be undone unless you have a JSON backup.</p>
+              <button class="btn btn-danger btn-sm" onclick="openResetConfirmModal()">Reset Application Database & Cloud</button>
             </div>
           </div>
         </div>
@@ -3173,10 +3212,10 @@
               <input type="date" class="form-control" id="pRegDate" required>
             </div>
             <div class="form-group">
-              <label class="form-label">Status</label>
+              <label class="form-label">Patient Status</label>
               <select class="form-control" id="pStatus">
                 <option value="Active">Active</option>
-                <option value="Archived">Archived</option>
+                <option value="Inactive">Inactive</option>
               </select>
             </div>
           </div>
@@ -3362,6 +3401,7 @@
                   <th>Paid</th>
                   <th>Balance</th>
                   <th>Status</th>
+                  <th style="text-align:right;">Actions</th>
                 </tr>
               </thead>
               <tbody id="profInvoicesTableBody"></tbody>
@@ -3457,13 +3497,19 @@
           </div>
 
           <div class="form-row">
-            <div class="form-group">
+            <div class="form-group" style="flex:1.4;">
               <label class="form-label">Link Treatment Package (Optional)</label>
-              <select class="form-control" id="aptPackageSelect">
+              <select class="form-control" id="aptPackageSelect" onchange="handleAptPackageSelect()">
                 <option value="">None (Individual Session)</option>
               </select>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="aptPackageSessionGroup" style="display:none; flex:1.4;">
+              <label class="form-label">Select Package Session <span class="req">*</span></label>
+              <select class="form-control" id="aptPackageSessionNumber" onchange="handleAptPackageSessionChange()">
+                <!-- Populated dynamically with 1st, 2nd, 3rd session options -->
+              </select>
+            </div>
+            <div class="form-group" style="flex:1;">
               <label class="form-label">Appointment Status</label>
               <select class="form-control" id="aptStatus">
                 <option value="Scheduled">Scheduled</option>
@@ -3510,12 +3556,28 @@
               </select>
             </div>
             <div class="form-group">
+              <label class="form-label">Treating Doctor / Physiotherapist <span class="req">*</span></label>
+              <select class="form-control" id="invDoctorSelect" required>
+                <option value="Dr Suhaib">Dr Suhaib</option>
+                <option value="Dr Anand">Dr Anand</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
               <label class="form-label">Invoice Date <span class="req">*</span></label>
               <input type="date" class="form-control" id="invDate" required>
             </div>
             <div class="form-group">
               <label class="form-label">Payment Due Date <span class="req">*</span></label>
               <input type="date" class="form-control" id="invDueDate" required>
+            </div>
+            <div class="form-group" id="invPackageSessionQuickGroup" style="display:none;">
+              <label class="form-label">Link Package Session</label>
+              <select class="form-control" id="invPackageSessionSelect" onchange="addPackageSessionToInvoice()" style="font-size:12px;">
+                <option value="">+ Insert Package Session Item...</option>
+              </select>
             </div>
           </div>
 
@@ -3548,7 +3610,33 @@
             <div>
               <div class="form-group">
                 <label class="form-label">Notes & Instructions</label>
-                <textarea class="form-control" id="invNotes" rows="3" placeholder="Payment terms, package notes, etc."></textarea>
+                <textarea class="form-control" id="invNotes" rows="2" placeholder="Payment terms, package notes, etc."></textarea>
+              </div>
+
+              <!-- Automatic Record Payment (Immediate Settlement) -->
+              <div class="inv-auto-payment-card" id="invAutoPaymentCard" style="background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); border: 1.5px solid #86EFAC; border-radius: var(--radius-md); padding: 12px 14px; margin-top: 10px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom: 8px;">
+                  <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13px; font-weight:700; color:#15803D; margin:0;">
+                    <input type="checkbox" id="invAutoRecordPayment" onchange="toggleInvAutoPaymentFields()" checked style="width:16px; height:16px; accent-color:#16A34A; cursor:pointer;">
+                    <span>⚡ Auto Record Payment (Settled)</span>
+                  </label>
+                  <span class="badge badge-success" style="font-size:11px; padding:2px 8px;" id="invAutoPayBadge">Auto-Recorded</span>
+                </div>
+                <div id="invAutoPaymentFields" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                  <div class="form-group" style="margin:0;">
+                    <label class="form-label" style="font-size:11px; margin-bottom:3px; color:#166534; font-weight:600;">Payment Mode</label>
+                    <select class="form-control" id="invAutoPaymentMethod" style="font-size:12px; padding:6px 8px; background:#fff;">
+                      <option value="UPI / QR" selected>UPI / QR (GPay / PhonePe)</option>
+                      <option value="Cash">Cash at Counter</option>
+                      <option value="Card (POS)">Card (POS)</option>
+                      <option value="Net Banking">Net Banking / Transfer</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin:0;">
+                    <label class="form-label" style="font-size:11px; margin-bottom:3px; color:#166534; font-weight:600;">Transaction Ref / Note</label>
+                    <input type="text" class="form-control" id="invAutoPaymentNote" placeholder="e.g. UPI Ref / Cash Received" style="font-size:12px; padding:6px 8px; background:#fff;">
+                  </div>
+                </div>
               </div>
             </div>
             <div>
@@ -3630,6 +3718,17 @@
           <div class="form-group">
             <label class="form-label">Reference / Transaction Notes</label>
             <input type="text" class="form-control" id="payNotes" placeholder="UPI Ref ID, receipt number, etc.">
+          </div>
+
+          <!-- Quick 1-Click Settlement Options -->
+          <div style="background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); border: 1.5px solid #86EFAC; border-radius: var(--radius-md); padding: 12px; margin-top: 12px;">
+            <div style="font-size: 11.5px; font-weight: 700; color: #166534; text-transform: uppercase; margin-bottom: 8px; display:flex; align-items:center; gap:6px;">
+              <span>⚡ Quick 1-Click Settle Balance</span>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" class="btn btn-sm btn-success" onclick="quickPayInRecordModal('UPI / QR')" style="flex:1; justify-content:center;">⚡ Settle Full via UPI</button>
+              <button type="button" class="btn btn-sm btn-secondary" onclick="quickPayInRecordModal('Cash')" style="flex:1; justify-content:center; background:#fff;">💵 Settle Full via Cash</button>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -3737,16 +3836,83 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13px;">
-              <input type="checkbox" id="pkgAutoCreateInvoice" checked>
-              <span>Automatically generate invoice for this package</span>
+          <!-- Treatment Package Invoicing & Auto-Payment -->
+          <div class="form-group" style="background:#F0FDF4; border:1.5px solid #86EFAC; border-radius:var(--radius-md); padding:12px; margin-top:8px;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13px; font-weight:700; color:#15803D; margin-bottom:8px;">
+              <input type="checkbox" id="pkgAutoCreateInvoice" checked onchange="togglePkgInvoiceAndPayment()">
+              <span>⚡ Automatically generate invoice for this package</span>
             </label>
+            <div id="pkgAutoPaymentContainer" style="padding-top:8px; border-top:1px dashed #86EFAC; display:flex; flex-direction:column; gap:8px;">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:12.5px; font-weight:600; color:#166534; margin:0;">
+                <input type="checkbox" id="pkgAutoRecordPayment" checked onchange="togglePkgPaymentMethodSelect()">
+                <span>Auto-record full payment as received (Settled)</span>
+              </label>
+              <div id="pkgPaymentMethodGroup" style="display:flex; align-items:center; gap:8px; margin-top:2px;">
+                <label style="font-size:11.5px; color:#166534; font-weight:600; white-space:nowrap; margin:0;">Payment Mode:</label>
+                <select class="form-control" id="pkgPaymentMethod" style="font-size:12px; padding:5px 8px; background:#fff; max-width:220px;">
+                  <option value="UPI / QR" selected>UPI / QR (GPay / PhonePe)</option>
+                  <option value="Cash">Cash at Counter</option>
+                  <option value="Card (POS)">Card (POS)</option>
+                  <option value="Net Banking">Net Banking / Transfer</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="closeModal('assignPackageModal')">Cancel</button>
           <button type="submit" class="btn btn-primary">Assign Package</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7b. Log / Select Package Session Modal -->
+  <div class="modal-backdrop" id="packageSessionModal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title">Log Treatment Package Session</h3>
+        <button class="btn-icon" onclick="closeModal('packageSessionModal')">&times;</button>
+      </div>
+      <form id="packageSessionForm" onsubmit="savePackageSessionLog(event)">
+        <div class="modal-body">
+          <input type="hidden" id="logPkgId">
+          <div class="form-group">
+            <label class="form-label">Package & Patient Information</label>
+            <div style="background:#FAFBFD; padding:12px; border-radius:var(--radius-md); font-size:13px; line-height:1.6;" id="logPkgSummary">
+              <!-- Summary of patient and package -->
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" style="flex: 1.5;">
+              <label class="form-label">Select Session to Log / Complete <span class="req">*</span></label>
+              <select class="form-control" id="logPkgSessionSelect" required>
+                <!-- Populated dynamically: 1st, 2nd, 3rd session options -->
+              </select>
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label class="form-label">Session Date <span class="req">*</span></label>
+              <input type="date" class="form-control" id="logPkgSessionDate" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Treating Physiotherapist <span class="req">*</span></label>
+            <select class="form-control" id="logPkgDoctor" required>
+              <option value="Dr Suhaib">Dr Suhaib</option>
+              <option value="Dr Anand">Dr Anand</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Session Clinical Notes</label>
+            <textarea class="form-control" id="logPkgNotes" rows="2" placeholder="Exercises performed, mobility improvements, patient response..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('packageSessionModal')">Cancel</button>
+          <button type="submit" class="btn btn-success">Update Package Progress</button>
         </div>
       </form>
     </div>
@@ -3896,21 +4062,32 @@
   <div class="modal-backdrop" id="resetConfirmModal">
     <div class="modal-window">
       <div class="modal-header" style="background:var(--danger-soft);">
-        <h3 class="modal-title" style="color:var(--danger);">Confirm Data Reset</h3>
+        <h3 class="modal-title" style="color:var(--danger);">Confirm Complete Application & Cloud Reset</h3>
         <button class="btn-icon" onclick="closeModal('resetConfirmModal')">&times;</button>
       </div>
       <div class="modal-body">
         <p style="font-size:13.5px; margin-bottom:12px; line-height:1.5;">
-          This will permanently delete <strong>all patients, appointments, invoices, payments, packages, and expenses</strong> from this browser.
+          This will permanently delete <strong>all patients, appointments, invoices, payments, packages, and expenses</strong>.
         </p>
-        <p style="font-size:12.5px; color:var(--text-secondary); margin-bottom:14px;">
+        
+        <div style="background:#FFF1F2; border:1px solid #FECDD3; border-radius:6px; padding:12px; margin-bottom:14px;">
+          <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-size:12.5px; color:#9F1239; font-weight:600;">
+            <input type="checkbox" id="resetFirebaseCloudCheckbox" checked style="width:16px; height:16px; margin-top:2px;">
+            <span>Also export reset to Firebase Cloud (Wipe cloud collections on project <strong style="text-decoration:underline;">functional-rehab-lab</strong>)</span>
+          </label>
+          <div style="font-size:11px; color:#BE123C; margin-left:26px; margin-top:4px;">
+            When checked, all patient records, appointments, invoices, expenses, and counters in Cloud Firestore will also be cleared so no old data gets pulled back.
+          </div>
+        </div>
+
+        <p style="font-size:12.5px; color:var(--text-secondary); margin-bottom:8px;">
           Type <strong style="color:var(--danger);">RESET</strong> below to confirm:
         </p>
         <input type="text" class="form-control" id="resetConfirmInput" placeholder="Type RESET">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" onclick="closeModal('resetConfirmModal')">Cancel</button>
-        <button type="button" class="btn btn-danger" onclick="executeDatabaseReset()">Erase All Data</button>
+        <button type="button" class="btn btn-danger" id="btnExecuteReset" onclick="executeDatabaseReset()">Erase All Data & Reset</button>
       </div>
     </div>
   </div>
@@ -5006,11 +5183,11 @@ service cloud.firestore {
       const invoices = getStoredData(STORAGE_KEYS.invoices, []);
       const today = getTodayYMD();
 
-      // Active vs Archived
-      const activePatients = patients.filter(p => p.status === 'Active');
-      const archivedPatients = patients.filter(p => p.status === 'Archived');
+      // Active vs Inactive (Archived legacy supported as Inactive)
+      const activePatients = patients.filter(p => (p.status || 'Active') === 'Active');
+      const inactivePatients = patients.filter(p => p.status === 'Inactive' || p.status === 'Archived');
       document.getElementById("dashTotalPatients").textContent = activePatients.length;
-      document.getElementById("dashArchivedCount").textContent = `${archivedPatients.length} archived`;
+      document.getElementById("dashArchivedCount").textContent = `${inactivePatients.length} inactive`;
 
       // Today's Appointments
       const todayApts = appointments.filter(a => a.date === today && a.status !== 'Cancelled');
@@ -5209,7 +5386,9 @@ service cloud.firestore {
       const statusFilter = document.getElementById("patientStatusFilter")?.value || "Active";
 
       let filtered = patients.filter(p => {
-        if (statusFilter !== "All" && p.status !== statusFilter) return false;
+        const pStatus = (p.status === 'Archived') ? 'Inactive' : (p.status || 'Active');
+        if (statusFilter === "Active" && pStatus !== "Active") return false;
+        if (statusFilter === "Inactive" && pStatus !== "Inactive") return false;
         if (docFilter) {
           const matchDoc = (p.assignedDoctor === docFilter) || (docFilter === "Dr Suhaib" && p.assignedDoctor === "Dr Subaib");
           if (!matchDoc) return false;
@@ -5260,7 +5439,7 @@ service cloud.firestore {
           <td>${escapeHTML(p.assignedDoctor || '-')}</td>
           <td>
             <span class="badge ${p.status === 'Active' ? 'badge-success' : 'badge-neutral'}">
-              <span class="badge-dot"></span>${p.status}
+              <span class="badge-dot"></span>${p.status === 'Archived' ? 'Inactive' : (p.status || 'Active')}
             </span>
           </td>
           <td style="text-align: right;">
@@ -5268,10 +5447,11 @@ service cloud.firestore {
               <button class="btn btn-sm btn-secondary" onclick="viewPatientProfile('${p.id}')">View</button>
               <button class="btn btn-sm btn-secondary" onclick="openPatientModal('${p.id}')">Edit</button>
               ${p.status === 'Active' ? `
-                <button class="btn btn-sm btn-danger" onclick="archivePatient('${p.id}', true)">Archive</button>
+                <button class="btn btn-sm btn-secondary" style="color:var(--text-secondary);" onclick="togglePatientStatus('${p.id}', false)">Deactivate</button>
               ` : `
-                <button class="btn btn-sm btn-accent" onclick="archivePatient('${p.id}', false)">Restore</button>
+                <button class="btn btn-sm btn-success" onclick="togglePatientStatus('${p.id}', true)">Activate</button>
               `}
+              <button class="btn btn-sm btn-danger" title="Permanently Delete Patient" onclick="deletePatient('${p.id}')">&times;</button>
             </div>
           </td>
         </tr>
@@ -5551,7 +5731,7 @@ service cloud.firestore {
 
       // Reset filter to Active so the newly registered patient is immediately visible
       const sFilter = document.getElementById("patientStatusFilter");
-      if (sFilter && sFilter.value === "Archived") {
+      if (sFilter && (sFilter.value === "Inactive" || sFilter.value === "Archived")) {
         sFilter.value = "Active";
       }
 
@@ -5575,21 +5755,51 @@ service cloud.firestore {
       }
     }
 
-    function archivePatient(patientId, isArchiving) {
-      const confirmMsg = isArchiving 
-        ? "Archive this patient? All history, appointments, and billing will be preserved safely."
-        : "Restore this patient to Active status?";
+    function togglePatientStatus(patientId, makeActive) {
+      const confirmMsg = makeActive 
+        ? "Mark this patient as Active?"
+        : "Mark this patient as Inactive? (All history, visits, and invoices will remain intact)";
       if (!confirm(confirmMsg)) return;
 
       const patients = getStoredData(STORAGE_KEYS.patients, []);
       const p = patients.find(item => item.id === patientId);
       if (p) {
-        p.status = isArchiving ? "Archived" : "Active";
+        p.status = makeActive ? "Active" : "Inactive";
         setStoredData(STORAGE_KEYS.patients, patients);
-        showToast(`Patient ${patientId} marked as ${p.status}`);
+        showToast(`Patient ${patientId} is now marked as ${p.status}`);
         renderPatientsTable();
+        renderDashboard();
         updateSidebarBadges();
       }
+    }
+
+    function deletePatient(patientId) {
+      const patients = getStoredData(STORAGE_KEYS.patients, []);
+      const p = patients.find(item => item.id === patientId);
+      const name = p ? p.fullName : patientId;
+
+      if (!confirm(`Are you sure you want to permanently remove patient "${name}" (${patientId})? This will delete the patient record from local storage and Cloud Firestore.`)) {
+        return;
+      }
+
+      const updatedPatients = patients.filter(item => item.id !== patientId);
+      setStoredData(STORAGE_KEYS.patients, updatedPatients);
+      if (typeof SyncEngine !== "undefined" && SyncEngine.notifyDelete) {
+        SyncEngine.notifyDelete("patients", patientId);
+      }
+
+      showToast(`Patient ${name} removed`);
+      renderPatientsTable();
+      renderDashboard();
+      updateSidebarBadges();
+      populatePatientDropdown("aptPatientSelect");
+      populatePatientDropdown("invPatientSelect");
+      populatePatientDropdown("pkgAssignPatient");
+    }
+
+    // Retain archivePatient alias for backward compatibility
+    function archivePatient(patientId, isArchiving) {
+      togglePatientStatus(patientId, !isArchiving);
     }
 
     let currentActiveProfilePatientId = null;
@@ -5628,7 +5838,16 @@ service cloud.firestore {
           <td>${a.id}</td>
           <td>${formatDateDisplay(a.date)} ${a.time}</td>
           <td>${escapeHTML(a.doctor)}</td>
-          <td>${escapeHTML(a.service)}</td>
+          <td>
+            <div>${escapeHTML(a.service)}</div>
+            ${a.sessionNumber ? `
+              <div style="margin-top:3px;">
+                <span class="badge badge-primary" style="font-size:10.5px; padding:2px 7px; font-weight:700;">
+                  ⚡ ${getSessionShortOrdinal(a.sessionNumber)}
+                </span>
+              </div>
+            ` : ''}
+          </td>
           <td><span class="badge ${getAptStatusBadge(a.status)}">${a.status}</span></td>
           <td>${escapeHTML(a.notes || '-')}</td>
         </tr>
@@ -5641,15 +5860,21 @@ service cloud.firestore {
         const bal = calculateInvoiceBalance(inv);
         return `
           <tr>
-            <td><strong>${inv.number}</strong></td>
+            <td><strong style="color:var(--primary); cursor:pointer;" onclick="viewPrintInvoice('${inv.id}')">${inv.number}</strong></td>
             <td>${formatDateDisplay(inv.date)}</td>
             <td>${formatINR(inv.total)}</td>
             <td>${formatINR(inv.paid)}</td>
             <td style="color:${bal > 0 ? 'var(--danger)' : 'var(--success)'}; font-weight:700;">${formatINR(bal)}</td>
             <td><span class="badge ${getInvoiceBadgeClass(inv.status)}">${inv.status}</span></td>
+            <td style="text-align:right;">
+              <div style="display:inline-flex; gap:6px;">
+                <button class="btn btn-sm btn-secondary" onclick="viewPrintInvoice('${inv.id}')">View</button>
+                ${bal > 0 ? `<button class="btn btn-sm btn-success" onclick="quickSettleInvoice('${inv.id}')" title="Instantly record full settlement">⚡ Settle</button>` : ''}
+              </div>
+            </td>
           </tr>
         `;
-      }).join('') : `<tr><td colspan="6" style="text-align:center; color:#999; padding:16px;">No invoices found</td></tr>`;
+      }).join('') : `<tr><td colspan="7" style="text-align:center; color:#999; padding:16px;">No invoices found</td></tr>`;
 
       // Packages
       const pkgs = getStoredData(STORAGE_KEYS.patientPackages, []).filter(pk => pk.patientId === p.id);
@@ -5989,7 +6214,16 @@ service cloud.firestore {
             </a>
           </td>
           <td>${escapeHTML(a.doctor)}</td>
-          <td>${escapeHTML(a.service)}</td>
+          <td>
+            <div>${escapeHTML(a.service)}</div>
+            ${a.sessionNumber ? `
+              <div style="margin-top:3px;">
+                <span class="badge badge-primary" style="font-size:10.5px; padding:2px 7px; font-weight:700;">
+                  ⚡ ${getSessionShortOrdinal(a.sessionNumber)}
+                </span>
+              </div>
+            ` : ''}
+          </td>
           <td>
             <span class="badge ${getAptStatusBadge(a.status)}">
               <span class="badge-dot"></span>${a.status}
@@ -6006,8 +6240,9 @@ service cloud.firestore {
               <button class="btn btn-sm btn-secondary" onclick="openAppointmentModal('${a.id}')">Edit</button>
               ${a.status === 'Scheduled' ? `
                 <button class="btn btn-sm btn-success" onclick="markAptStatus('${a.id}', 'Completed')">Complete</button>
-                <button class="btn btn-sm btn-danger" onclick="markAptStatus('${a.id}', 'Cancelled')">Cancel</button>
+                <button class="btn btn-sm btn-secondary" style="color:var(--danger);" onclick="markAptStatus('${a.id}', 'Cancelled')">Cancel</button>
               ` : ''}
+              <button class="btn btn-sm btn-danger" title="Permanently Delete Appointment" onclick="deleteAppointment('${a.id}')">&times;</button>
             </div>
           </td>
         </tr>
@@ -6095,6 +6330,7 @@ service cloud.firestore {
                 <div style="display:flex; gap:8px;">
                   <span class="badge ${getAptStatusBadge(a.status)}">${a.status}</span>
                   <button class="btn btn-sm btn-secondary" onclick="openAppointmentModal('${a.id}')">Edit</button>
+                  <button class="btn btn-sm btn-danger" title="Delete" onclick="deleteAppointment('${a.id}')">&times;</button>
                 </div>
               </div>
             `).join('') : '<p class="empty-desc">No sessions scheduled for this date.</p>'}
@@ -6103,11 +6339,40 @@ service cloud.firestore {
       }
     }
 
+    // Helper function to format ordinal session names
+    function getSessionOrdinalLabel(num) {
+      const n = Number(num) || 1;
+      const words = [
+        "", "First Session", "Second Session", "Third Session", "Fourth Session",
+        "Fifth Session", "Sixth Session", "Seventh Session", "Eighth Session",
+        "Ninth Session", "Tenth Session", "Eleventh Session", "Twelfth Session",
+        "Thirteenth Session", "Fourteenth Session", "Fifteenth Session",
+        "Sixteenth Session", "Seventeenth Session", "Eighteenth Session",
+        "Nineteenth Session", "Twentieth Session"
+      ];
+      const suffix = (n === 1) ? '1st' : (n === 2) ? '2nd' : (n === 3) ? '3rd' : `${n}th`;
+      const word = words[n] || `Session ${n}`;
+      return `${suffix} Session (${word})`;
+    }
+
+    function getSessionShortOrdinal(num) {
+      const n = Number(num) || 1;
+      const words = [
+        "", "First", "Second", "Third", "Fourth", "Fifth",
+        "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"
+      ];
+      const suffix = (n === 1) ? '1st' : (n === 2) ? '2nd' : (n === 3) ? '3rd' : `${n}th`;
+      const word = words[n] ? ` - ${words[n]}` : '';
+      return `${suffix} Session${word}`;
+    }
+
     function openAppointmentModal(appointmentId = null) {
       const form = document.getElementById("appointmentForm");
       form.reset();
       populatePatientDropdown("aptPatientSelect");
       document.getElementById("aptConflictWarning").style.display = "none";
+      const sessionGroup = document.getElementById("aptPackageSessionGroup");
+      if (sessionGroup) sessionGroup.style.display = "none";
 
       if (appointmentId) {
         document.getElementById("aptModalTitle").textContent = "Edit Appointment";
@@ -6124,6 +6389,13 @@ service cloud.firestore {
           document.getElementById("aptDoctor").value = (a.doctor === "Dr Subaib") ? "Dr Suhaib" : (a.doctor || "Dr Suhaib");
           document.getElementById("aptService").value = a.service;
           document.getElementById("aptPackageSelect").value = a.packageId || "";
+          if (a.packageId) {
+            handleAptPackageSelect();
+            if (a.sessionNumber) {
+              const sessionSelect = document.getElementById("aptPackageSessionNumber");
+              if (sessionSelect) sessionSelect.value = a.sessionNumber;
+            }
+          }
           document.getElementById("aptStatus").value = a.status || "Scheduled";
           document.getElementById("aptNotes").value = a.notes || "";
         }
@@ -6143,7 +6415,17 @@ service cloud.firestore {
       const pId = document.getElementById("aptPatientSelect").value;
       const pkgSelect = document.getElementById("aptPackageSelect");
       pkgSelect.innerHTML = '<option value="">None (Individual Session)</option>';
+      const sessionGroup = document.getElementById("aptPackageSessionGroup");
+      if (sessionGroup) sessionGroup.style.display = "none";
       if (!pId) return;
+
+      // Auto-assign doctor if patient has an assigned doctor
+      const patients = getStoredData(STORAGE_KEYS.patients, []);
+      const p = patients.find(item => item.id === pId);
+      if (p && p.assignedDoctor) {
+        const aptDoc = document.getElementById("aptDoctor");
+        if (aptDoc) aptDoc.value = (p.assignedDoctor === "Dr Subaib") ? "Dr Suhaib" : p.assignedDoctor;
+      }
 
       const patientPackages = getStoredData(STORAGE_KEYS.patientPackages, []).filter(pk => pk.patientId === pId && pk.status === 'Active');
       patientPackages.forEach(pk => {
@@ -6153,6 +6435,71 @@ service cloud.firestore {
         opt.textContent = `${pk.packageName} (${remaining} sessions remaining)`;
         pkgSelect.appendChild(opt);
       });
+
+      if (patientPackages.length === 1) {
+        pkgSelect.value = patientPackages[0].id;
+        handleAptPackageSelect();
+      }
+    }
+
+    function handleAptPackageSelect() {
+      const pkgId = document.getElementById("aptPackageSelect").value;
+      const sessionGroup = document.getElementById("aptPackageSessionGroup");
+      const sessionSelect = document.getElementById("aptPackageSessionNumber");
+
+      if (!pkgId) {
+        if (sessionGroup) sessionGroup.style.display = "none";
+        return;
+      }
+
+      const patientPackages = getStoredData(STORAGE_KEYS.patientPackages, []);
+      const pk = patientPackages.find(item => item.id === pkgId);
+      if (!pk) {
+        if (sessionGroup) sessionGroup.style.display = "none";
+        return;
+      }
+
+      const total = Number(pk.totalSessions) || 10;
+      const completed = Number(pk.completedSessions) || 0;
+
+      sessionSelect.innerHTML = "";
+      for (let i = 1; i <= total; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        const isDone = (i <= completed);
+        const isNext = (i === completed + 1);
+        opt.textContent = `${getSessionOrdinalLabel(i)}${isDone ? ' (Completed)' : (isNext ? ' ★ Next Session' : '')}`;
+        sessionSelect.appendChild(opt);
+      }
+
+      // Default to next session or total
+      const nextSession = Math.min(total, completed + 1);
+      sessionSelect.value = nextSession;
+      if (sessionGroup) sessionGroup.style.display = "block";
+
+      handleAptPackageSessionChange();
+    }
+
+    function handleAptPackageSessionChange() {
+      const pkgId = document.getElementById("aptPackageSelect").value;
+      const sessionNum = document.getElementById("aptPackageSessionNumber")?.value;
+      if (!pkgId || !sessionNum) return;
+
+      const patientPackages = getStoredData(STORAGE_KEYS.patientPackages, []);
+      const pk = patientPackages.find(item => item.id === pkgId);
+      if (!pk) return;
+
+      const sessionLabel = getSessionOrdinalLabel(sessionNum);
+
+      // Auto update service to Package Follow-up Session
+      const aptService = document.getElementById("aptService");
+      if (aptService) aptService.value = "Package Follow-up Session";
+
+      // Append or suggest in notes
+      const notesEl = document.getElementById("aptNotes");
+      if (notesEl && (!notesEl.value || notesEl.value.includes("Session"))) {
+        notesEl.value = `${pk.packageName} - ${sessionLabel}`;
+      }
     }
 
     function checkDoctorOverlap() {
@@ -6198,6 +6545,10 @@ service cloud.firestore {
       const prevApt = existingId ? appointments.find(a => a.id === existingId) : null;
       const newStatus = document.getElementById("aptStatus").value;
 
+      const pkgId = document.getElementById("aptPackageSelect").value || null;
+      const sessionNum = pkgId ? Number(document.getElementById("aptPackageSessionNumber")?.value) || null : null;
+      const sessionLabel = sessionNum ? getSessionOrdinalLabel(sessionNum) : null;
+
       const aptData = {
         id: existingId || document.getElementById("aptId").value,
         patientId: patient.id,
@@ -6209,7 +6560,9 @@ service cloud.firestore {
         duration: Number(document.getElementById("aptDuration").value) || 45,
         doctor: document.getElementById("aptDoctor").value,
         service: document.getElementById("aptService").value,
-        packageId: document.getElementById("aptPackageSelect").value || null,
+        packageId: pkgId,
+        sessionNumber: sessionNum,
+        sessionLabel: sessionLabel,
         status: newStatus,
         notes: document.getElementById("aptNotes").value.trim()
       };
@@ -6240,6 +6593,31 @@ service cloud.firestore {
       }
 
       closeModal("appointmentModal");
+      renderAppointments();
+      renderDashboard();
+      updateSidebarBadges();
+    }
+
+    function deleteAppointment(appointmentId) {
+      if (!confirm(`Are you sure you want to permanently delete appointment ${appointmentId}?`)) {
+        return;
+      }
+
+      let appointments = getStoredData(STORAGE_KEYS.appointments, []);
+      const apt = appointments.find(a => a.id === appointmentId);
+
+      // Revert session count if appointment was completed on a package
+      if (apt && apt.packageId && apt.status === 'Completed') {
+        updatePackageSessionCount(apt.packageId, -1);
+      }
+
+      appointments = appointments.filter(a => a.id !== appointmentId);
+      setStoredData(STORAGE_KEYS.appointments, appointments);
+      if (typeof SyncEngine !== "undefined" && SyncEngine.notifyDelete) {
+        SyncEngine.notifyDelete("appointments", appointmentId);
+      }
+
+      showToast(`Appointment ${appointmentId} deleted`);
       renderAppointments();
       renderDashboard();
       updateSidebarBadges();
@@ -6341,6 +6719,9 @@ service cloud.firestore {
               <a href="javascript:void(0)" onclick="viewPatientProfile('${inv.patientId}')" style="font-weight:600; color:var(--text-main); text-decoration:none;">
                 ${escapeHTML(inv.patientName)}
               </a>
+              <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">
+                <span style="color:var(--primary); font-weight:600;">Dr:</span> ${escapeHTML(inv.doctor || 'Dr Suhaib')}
+              </div>
             </td>
             <td><strong>${formatINR(inv.total)}</strong></td>
             <td style="color:var(--success); font-weight:600;">${formatINR(inv.paid)}</td>
@@ -6349,7 +6730,10 @@ service cloud.firestore {
             <td style="text-align: right;">
               <div style="display:inline-flex; gap:6px;">
                 <button class="btn btn-sm btn-secondary" onclick="viewPrintInvoice('${inv.id}')">View / Print</button>
-                ${bal > 0 ? `<button class="btn btn-sm btn-success" onclick="openRecordPaymentModal('${inv.id}')">Record Pay</button>` : ''}
+                ${bal > 0 ? `
+                  <button class="btn btn-sm btn-success" onclick="quickSettleInvoice('${inv.id}')" title="Instantly record full settlement of ${formatINR(bal)}">⚡ Quick Settle</button>
+                  <button class="btn btn-sm btn-secondary" onclick="openRecordPaymentModal('${inv.id}')" title="Record custom payment amount">Record Pay</button>
+                ` : ''}
                 <button class="btn btn-sm btn-secondary" onclick="openInvoiceModal('${inv.id}')">Edit</button>
                 <button class="btn btn-sm btn-danger" onclick="deleteInvoice('${inv.id}')">&times;</button>
               </div>
@@ -6379,6 +6763,11 @@ service cloud.firestore {
       populatePatientDropdown("invPatientSelect");
       currentInvoiceItems = [];
 
+      const autoPayCard = document.getElementById("invAutoPaymentCard");
+      const autoPayCheck = document.getElementById("invAutoRecordPayment");
+      const autoPayFields = document.getElementById("invAutoPaymentFields");
+      const autoPayBadge = document.getElementById("invAutoPayBadge");
+
       if (invoiceId) {
         document.getElementById("invoiceModalTitle").textContent = "Edit Invoice";
         const invoices = getStoredData(STORAGE_KEYS.invoices, []);
@@ -6387,12 +6776,29 @@ service cloud.firestore {
           document.getElementById("invRecordId").value = inv.id;
           document.getElementById("invNumber").value = inv.number;
           document.getElementById("invPatientSelect").value = inv.patientId;
+          const invDoc = document.getElementById("invDoctorSelect");
+          if (invDoc) invDoc.value = (inv.doctor === "Dr Subaib") ? "Dr Suhaib" : (inv.doctor || "Dr Suhaib");
+          handleInvoicePatientChange(true);
           document.getElementById("invDate").value = inv.date;
           document.getElementById("invDueDate").value = inv.dueDate;
           document.getElementById("invDiscount").value = inv.discount || 0;
           document.getElementById("invTaxPercent").value = inv.taxPercent || 0;
           document.getElementById("invNotes").value = inv.notes || "";
           currentInvoiceItems = JSON.parse(JSON.stringify(inv.items || []));
+
+          const bal = calculateInvoiceBalance(inv);
+          if (autoPayCard && autoPayCheck) {
+            if (bal <= 0) {
+              autoPayCard.style.display = "none";
+              autoPayCheck.checked = false;
+              if (autoPayFields) autoPayFields.style.display = "none";
+            } else {
+              autoPayCard.style.display = "block";
+              autoPayCheck.checked = false;
+              if (autoPayFields) autoPayFields.style.display = "none";
+              if (autoPayBadge) autoPayBadge.style.display = "none";
+            }
+          }
         }
       } else {
         document.getElementById("invoiceModalTitle").textContent = "Create New Invoice";
@@ -6402,6 +6808,17 @@ service cloud.firestore {
         document.getElementById("invDueDate").value = getTodayYMD();
         document.getElementById("invDiscount").value = 0;
         document.getElementById("invTaxPercent").value = 0;
+        const invDoc = document.getElementById("invDoctorSelect");
+        if (invDoc) invDoc.value = "Dr Suhaib";
+        const pkgSessionGroup = document.getElementById("invPackageSessionQuickGroup");
+        if (pkgSessionGroup) pkgSessionGroup.style.display = "none";
+
+        if (autoPayCard) autoPayCard.style.display = "block";
+        if (autoPayCheck) autoPayCheck.checked = true;
+        if (autoPayFields) autoPayFields.style.display = "grid";
+        if (autoPayBadge) autoPayBadge.style.display = "inline-block";
+        if (document.getElementById("invAutoPaymentMethod")) document.getElementById("invAutoPaymentMethod").value = "UPI / QR";
+        if (document.getElementById("invAutoPaymentNote")) document.getElementById("invAutoPaymentNote").value = "";
 
         // Default initial line item
         currentInvoiceItems = [{
@@ -6415,8 +6832,82 @@ service cloud.firestore {
       openModal("invoiceModal");
     }
 
-    function handleInvoicePatientChange() {
-      // Optional hook for patient selection in invoice
+    function toggleInvAutoPaymentFields() {
+      const check = document.getElementById("invAutoRecordPayment");
+      const fields = document.getElementById("invAutoPaymentFields");
+      const badge = document.getElementById("invAutoPayBadge");
+      if (fields) fields.style.display = check && check.checked ? "grid" : "none";
+      if (badge) badge.style.display = check && check.checked ? "inline-block" : "none";
+    }
+
+    function handleInvoicePatientChange(isEditMode = false) {
+      const pId = document.getElementById("invPatientSelect")?.value;
+      const docSelect = document.getElementById("invDoctorSelect");
+      const pkgSessionGroup = document.getElementById("invPackageSessionQuickGroup");
+      const pkgSessionSelect = document.getElementById("invPackageSessionSelect");
+
+      if (!pId) {
+        if (pkgSessionGroup) pkgSessionGroup.style.display = "none";
+        return;
+      }
+
+      const patients = getStoredData(STORAGE_KEYS.patients, []);
+      const p = patients.find(item => item.id === pId);
+      if (p && p.assignedDoctor && docSelect && !isEditMode) {
+        docSelect.value = (p.assignedDoctor === "Dr Subaib") ? "Dr Suhaib" : p.assignedDoctor;
+      }
+
+      // Check active packages for this patient
+      const pPackages = getStoredData(STORAGE_KEYS.patientPackages, []).filter(pk => pk.patientId === pId && pk.status === 'Active');
+      if (pPackages.length > 0 && pkgSessionGroup && pkgSessionSelect) {
+        pkgSessionGroup.style.display = "block";
+        pkgSessionSelect.innerHTML = '<option value="">+ Insert Package Session Item...</option>';
+        pPackages.forEach(pk => {
+          const completed = pk.completedSessions || 0;
+          const total = pk.totalSessions || 10;
+          for (let s = 1; s <= total; s++) {
+            const opt = document.createElement("option");
+            opt.value = `${pk.id}|${s}`;
+            const isNext = (s === completed + 1);
+            opt.textContent = `${pk.packageName}: ${getSessionOrdinalLabel(s)}${isNext ? ' [Next Due]' : ''}`;
+            pkgSessionSelect.appendChild(opt);
+          }
+        });
+      } else if (pkgSessionGroup) {
+        pkgSessionGroup.style.display = "none";
+      }
+    }
+
+    function addPackageSessionToInvoice() {
+      const select = document.getElementById("invPackageSessionSelect");
+      const val = select.value;
+      if (!val) return;
+
+      const [pkId, sessionNum] = val.split('|');
+      const pPackages = getStoredData(STORAGE_KEYS.patientPackages, []);
+      const pk = pPackages.find(item => item.id === pkId);
+      if (!pk) return;
+
+      const sessionLabel = getSessionOrdinalLabel(sessionNum);
+      const desc = `Treatment Package Session: ${pk.packageName} - ${sessionLabel}`;
+
+      if (currentInvoiceItems.length === 1 && (!currentInvoiceItems[0].description || currentInvoiceItems[0].description === "Physiotherapy Consultation & Session")) {
+        currentInvoiceItems[0] = {
+          description: desc,
+          quantity: 1,
+          unitPrice: 0
+        };
+      } else {
+        currentInvoiceItems.push({
+          description: desc,
+          quantity: 1,
+          unitPrice: 0
+        });
+      }
+
+      renderInvoiceLineItems();
+      select.value = "";
+      showToast(`Added ${sessionLabel} to invoice items`);
     }
 
     function addInvoiceLineItem() {
@@ -6539,8 +7030,23 @@ service cloud.firestore {
         if (prev) payments = prev.payments || [];
       }
 
-      const totalPaid = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
-      const balance = Math.max(0, total - totalPaid);
+      let totalPaid = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+      let balance = Math.max(0, total - totalPaid);
+
+      const autoPayChecked = document.getElementById("invAutoRecordPayment")?.checked;
+      if (autoPayChecked && balance > 0) {
+        const payMethod = document.getElementById("invAutoPaymentMethod")?.value || "UPI / QR";
+        const payNote = document.getElementById("invAutoPaymentNote")?.value?.trim() || "Immediate settlement on invoice creation";
+        payments.push({
+          id: `PAY-${Date.now()}`,
+          date: document.getElementById("invDate").value || getTodayYMD(),
+          amount: balance,
+          method: payMethod,
+          notes: payNote
+        });
+        totalPaid += balance;
+        balance = 0;
+      }
 
       let status = "Unpaid";
       if (totalPaid >= total && total > 0) status = "Paid";
@@ -6553,6 +7059,7 @@ service cloud.firestore {
         patientName: patient.fullName,
         patientPhone: patient.phone,
         patientWhatsApp: patient.whatsapp || patient.phone,
+        doctor: document.getElementById("invDoctorSelect")?.value || patient.assignedDoctor || "Dr Suhaib",
         date: document.getElementById("invDate").value,
         dueDate: document.getElementById("invDueDate").value,
         items: currentInvoiceItems,
@@ -6572,17 +7079,21 @@ service cloud.firestore {
         if (index !== -1) {
           invoices[index] = invData;
           setStoredData(STORAGE_KEYS.invoices, invoices);
-          showToast(`Invoice ${invData.number} updated`);
+          showToast(autoPayChecked ? `Invoice ${invData.number} updated & settled in full (₹${formatINR(total)})` : `Invoice ${invData.number} updated`);
         }
       } else {
         invoices.push(invData);
         setStoredData(STORAGE_KEYS.invoices, invoices);
-        showToast(`Invoice ${invData.number} generated successfully`);
+        showToast(autoPayChecked ? `Invoice ${invData.number} created & marked Paid (₹${formatINR(total)})` : `Invoice ${invData.number} generated successfully`);
       }
 
       closeModal("invoiceModal");
       renderInvoicesTable();
       renderDashboard();
+      if (typeof renderFinancialReports === "function") renderFinancialReports();
+      if (typeof currentActiveProfilePatientId !== "undefined" && currentActiveProfilePatientId) {
+        viewPatientProfile(currentActiveProfilePatientId);
+      }
     }
 
     function deleteInvoice(invoiceId) {
@@ -6656,6 +7167,73 @@ service cloud.firestore {
       closeModal("recordPaymentModal");
       renderInvoicesTable();
       renderDashboard();
+      if (typeof renderFinancialReports === "function") renderFinancialReports();
+      if (typeof currentActiveProfilePatientId !== "undefined" && currentActiveProfilePatientId) {
+        viewPatientProfile(currentActiveProfilePatientId);
+      }
+    }
+
+    function quickPayInRecordModal(method) {
+      const methodSelect = document.getElementById("payMethod");
+      if (methodSelect) methodSelect.value = method;
+      const notesInput = document.getElementById("payNotes");
+      if (notesInput) notesInput.value = `Quick settlement via ${method}`;
+      const form = document.getElementById("recordPaymentForm");
+      if (form) {
+        if (typeof form.requestSubmit === "function") {
+          form.requestSubmit();
+        } else {
+          form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+        }
+      }
+    }
+
+    function quickSettleInvoice(invoiceId, defaultMethod = 'UPI / QR') {
+      const invoices = getStoredData(STORAGE_KEYS.invoices, []);
+      const inv = invoices.find(i => i.id === invoiceId);
+      if (!inv) {
+        showToast("Invoice not found", "error");
+        return;
+      }
+      const bal = calculateInvoiceBalance(inv);
+      if (bal <= 0) {
+        showToast(`Invoice ${inv.number} is already fully paid`, "info");
+        return;
+      }
+
+      const confirmed = confirm(
+        `⚡ Quick Settle Full Payment\n\n` +
+        `Invoice: ${inv.number}\n` +
+        `Patient: ${inv.patientName}\n` +
+        `Outstanding Balance: ₹${bal}\n` +
+        `Payment Mode: ${defaultMethod}\n\n` +
+        `Click OK to record full payment immediately.`
+      );
+      if (!confirmed) return;
+
+      const paymentRecord = {
+        id: `PAY-${Date.now()}`,
+        date: getTodayYMD(),
+        amount: bal,
+        method: defaultMethod,
+        notes: `Quick settled full balance ₹${bal}`
+      };
+
+      if (!inv.payments) inv.payments = [];
+      inv.payments.push(paymentRecord);
+      inv.paid = (inv.paid || 0) + bal;
+      inv.balance = 0;
+      inv.status = "Paid";
+
+      setStoredData(STORAGE_KEYS.invoices, invoices);
+      showToast(`⚡ Recorded full payment of ₹${bal} (${defaultMethod}) for ${inv.number} - Settled!`, "success");
+
+      renderInvoicesTable();
+      renderDashboard();
+      if (typeof renderFinancialReports === "function") renderFinancialReports();
+      if (typeof currentActiveProfilePatientId !== "undefined" && currentActiveProfilePatientId) {
+        viewPatientProfile(currentActiveProfilePatientId);
+      }
     }
 
     // --- Amount to Words Conversion (Indian Currency numbering system) ---
@@ -6787,7 +7365,7 @@ service cloud.firestore {
       // Find patient details for doctor / phone
       const patients = getStoredData(STORAGE_KEYS.patients, []);
       const p = patients.find(item => item.id === inv.patientId);
-      const assignedDoctor = (p && p.assignedDoctor) ? p.assignedDoctor : "Dr Suhaib / Dr Anand";
+      const assignedDoctor = inv.doctor || (p && p.assignedDoctor) || "Dr Suhaib";
       const patientPhone = inv.patientPhone || (p && p.phone) || "-";
       const patientInjury = (p && p.injury) ? p.injury : "-";
 
@@ -7047,7 +7625,7 @@ service cloud.firestore {
             </div>
             <div class="cinv-sign-block">
               <div class="cinv-sign-line"></div>
-              <div class="cinv-sign-label">Dr Suhaib / Dr Anand</div>
+              <div class="cinv-sign-label">${escapeHTML(assignedDoctor)}</div>
               <div class="cinv-sign-sub">Authorized Consultant Physiotherapist</div>
             </div>
           </div>
@@ -7097,8 +7675,11 @@ service cloud.firestore {
               </td>
               <td><strong>${escapeHTML(pk.packageName)}</strong></td>
               <td>${pk.totalSessions} sessions</td>
-              <td><strong style="color:var(--success);">${completed}</strong></td>
-              <td><strong style="color:${remaining <= 2 ? 'var(--danger)' : 'var(--primary)'};">${remaining}</strong></td>
+              <td>
+                <strong style="color:var(--success); font-size:14px;">${completed}</strong>
+                ${completed < pk.totalSessions ? `<div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">Next: <strong style="color:var(--primary);">${getSessionShortOrdinal(completed + 1)}</strong></div>` : ''}
+              </td>
+              <td><strong style="color:${remaining <= 2 ? 'var(--danger)' : 'var(--primary)'}; font-size:14px;">${remaining}</strong></td>
               <td>
                 ${formatDateDisplay(pk.expiryDate)}
                 ${isExpired ? `<div style="font-size:11px; color:var(--danger); font-weight:600;">Expired</div>` : ''}
@@ -7110,6 +7691,7 @@ service cloud.firestore {
               </td>
               <td style="text-align: right;">
                 <div style="display:inline-flex; gap:6px;">
+                  <button class="btn btn-sm btn-success" onclick="openLogPackageSessionModal('${pk.id}')" title="Select and log Second/Third session">⚡ Log Session</button>
                   <button class="btn btn-sm btn-secondary" onclick="promptPackageExpiryWhatsApp('${pk.id}')">WA Reminder</button>
                   <button class="btn btn-sm btn-danger" onclick="archivePatientPackage('${pk.id}')">&times;</button>
                 </div>
@@ -7134,10 +7716,109 @@ service cloud.firestore {
             <td>${t.validityDays} days</td>
             <td><span class="badge badge-success">Active</span></td>
             <td style="text-align: right;">
-              <button class="btn btn-sm btn-secondary" onclick="openPackageTemplateModal('${t.id}')">Edit</button>
+              <div style="display:inline-flex; gap:6px;">
+                <button class="btn btn-sm btn-secondary" onclick="openPackageTemplateModal('${t.id}')">Edit</button>
+                <button class="btn btn-sm btn-danger" title="Delete Template" onclick="deletePackageTemplate('${t.id}')">&times;</button>
+              </div>
             </td>
           </tr>
         `).join('');
+      }
+    }
+
+    function openLogPackageSessionModal(packageId) {
+      const pPackages = getStoredData(STORAGE_KEYS.patientPackages, []);
+      const pk = pPackages.find(item => item.id === packageId);
+      if (!pk) return;
+
+      document.getElementById("logPkgId").value = pk.id;
+      document.getElementById("logPkgSessionDate").value = getTodayYMD();
+      document.getElementById("logPkgNotes").value = "";
+
+      const patients = getStoredData(STORAGE_KEYS.patients, []);
+      const p = patients.find(item => item.id === pk.patientId);
+      const docSelect = document.getElementById("logPkgDoctor");
+      if (p && p.assignedDoctor && docSelect) {
+        docSelect.value = (p.assignedDoctor === "Dr Subaib") ? "Dr Suhaib" : p.assignedDoctor;
+      }
+
+      const total = Number(pk.totalSessions) || 10;
+      const completed = Number(pk.completedSessions) || 0;
+      const remaining = Math.max(0, total - completed);
+
+      document.getElementById("logPkgSummary").innerHTML = `
+        <div><strong>Patient:</strong> ${escapeHTML(pk.patientName)} (${escapeHTML(pk.patientId)})</div>
+        <div><strong>Package:</strong> ${escapeHTML(pk.packageName)} &bull; Total: <strong>${total}</strong> Sessions</div>
+        <div><strong>Progress:</strong> <span style="color:var(--success); font-weight:700;">${completed} completed</span> &bull; <span style="color:var(--primary); font-weight:700;">${remaining} remaining</span></div>
+      `;
+
+      const sessionSelect = document.getElementById("logPkgSessionSelect");
+      sessionSelect.innerHTML = "";
+      for (let s = 1; s <= total; s++) {
+        const opt = document.createElement("option");
+        opt.value = s;
+        const isDone = (s <= completed);
+        const isNext = (s === completed + 1);
+        opt.textContent = `${getSessionOrdinalLabel(s)}${isDone ? ' [Already Logged]' : (isNext ? ' ★ Next Available' : '')}`;
+        sessionSelect.appendChild(opt);
+      }
+
+      const nextVal = Math.min(total, completed + 1);
+      sessionSelect.value = nextVal;
+
+      openModal("packageSessionModal");
+    }
+
+    function savePackageSessionLog(e) {
+      e.preventDefault();
+      const pkgId = document.getElementById("logPkgId").value;
+      const sessionNum = Number(document.getElementById("logPkgSessionSelect").value);
+      const sessionDate = document.getElementById("logPkgSessionDate").value;
+      const doctor = document.getElementById("logPkgDoctor").value;
+      const notes = document.getElementById("logPkgNotes").value.trim();
+
+      const pPackages = getStoredData(STORAGE_KEYS.patientPackages, []);
+      const pk = pPackages.find(item => item.id === pkgId);
+      if (!pk) return;
+
+      const sessionLabel = getSessionOrdinalLabel(sessionNum);
+
+      // Update completed count to at least this session number
+      pk.completedSessions = Math.max(pk.completedSessions || 0, sessionNum);
+      if (pk.completedSessions >= pk.totalSessions) {
+        pk.status = 'Completed';
+      } else {
+        pk.status = 'Active';
+      }
+      setStoredData(STORAGE_KEYS.patientPackages, pPackages);
+
+      // Record completed appointment session log for tracking and history
+      const appointments = getStoredData(STORAGE_KEYS.appointments, []);
+      const aptId = getNextId('appointment');
+      appointments.push({
+        id: aptId,
+        patientId: pk.patientId,
+        patientName: pk.patientName,
+        date: sessionDate,
+        time: "10:30",
+        duration: 45,
+        doctor: doctor,
+        service: `Package: ${pk.packageName} - ${getSessionShortOrdinal(sessionNum)}`,
+        packageId: pk.id,
+        sessionNumber: sessionNum,
+        sessionLabel: sessionLabel,
+        status: "Completed",
+        notes: notes || `Package ${sessionLabel} completed with ${doctor}.`
+      });
+      setStoredData(STORAGE_KEYS.appointments, appointments);
+
+      showToast(`Logged ${sessionLabel} for ${pk.patientName}`);
+      closeModal("packageSessionModal");
+      renderPackagesView();
+      renderAppointments();
+      renderDashboard();
+      if (typeof currentActiveProfilePatientId !== "undefined" && currentActiveProfilePatientId) {
+        viewPatientProfile(currentActiveProfilePatientId);
       }
     }
 
@@ -7157,7 +7838,29 @@ service cloud.firestore {
       });
 
       document.getElementById("pkgAssignStartDate").value = getTodayYMD();
+
+      const pkgInvCheck = document.getElementById("pkgAutoCreateInvoice");
+      if (pkgInvCheck) pkgInvCheck.checked = true;
+      const pkgPayCheck = document.getElementById("pkgAutoRecordPayment");
+      if (pkgPayCheck) pkgPayCheck.checked = true;
+      const pkgCont = document.getElementById("pkgAutoPaymentContainer");
+      if (pkgCont) pkgCont.style.display = "flex";
+      const pkgGrp = document.getElementById("pkgPaymentMethodGroup");
+      if (pkgGrp) pkgGrp.style.display = "flex";
+
       openModal("assignPackageModal");
+    }
+
+    function togglePkgInvoiceAndPayment() {
+      const invCheck = document.getElementById("pkgAutoCreateInvoice");
+      const cont = document.getElementById("pkgAutoPaymentContainer");
+      if (cont) cont.style.display = (invCheck && invCheck.checked) ? "flex" : "none";
+    }
+
+    function togglePkgPaymentMethodSelect() {
+      const payCheck = document.getElementById("pkgAutoRecordPayment");
+      const grp = document.getElementById("pkgPaymentMethodGroup");
+      if (grp) grp.style.display = (payCheck && payCheck.checked) ? "flex" : "none";
     }
 
     function handlePackageTemplateSelect() {
@@ -7232,6 +7935,19 @@ service cloud.firestore {
       if (document.getElementById("pkgAutoCreateInvoice").checked) {
         const invoices = getStoredData(STORAGE_KEYS.invoices, []);
         const invNumber = getNextId('invoice');
+        const autoPay = document.getElementById("pkgAutoRecordPayment")?.checked;
+        const payMethod = document.getElementById("pkgPaymentMethod")?.value || "UPI / QR";
+        const payments = (autoPay && price > 0) ? [{
+          id: `PAY-${Date.now()}`,
+          date: startDate,
+          amount: price,
+          method: payMethod,
+          notes: `Auto-recorded payment for package: ${template.name}`
+        }] : [];
+        const paidAmount = (autoPay && price > 0) ? price : 0;
+        const balAmount = Math.max(0, price - paidAmount);
+        const invStatus = (autoPay && price > 0) ? "Paid" : "Unpaid";
+
         invoices.push({
           id: invNumber,
           number: invNumber,
@@ -7250,18 +7966,24 @@ service cloud.firestore {
           discount: 0,
           taxPercent: 0,
           total: price,
-          paid: 0,
-          balance: price,
-          status: "Unpaid",
+          paid: paidAmount,
+          balance: balAmount,
+          status: invStatus,
           notes: `Package validity until ${formatDateDisplay(expiryDate)}`,
-          payments: []
+          payments: payments
         });
         setStoredData(STORAGE_KEYS.invoices, invoices);
+        if (typeof renderInvoicesTable === "function") renderInvoicesTable();
       }
 
-      showToast(`Package assigned to ${patient.fullName}`);
+      showToast(`Package assigned to ${patient.fullName}${document.getElementById("pkgAutoRecordPayment")?.checked ? ' & payment settled' : ''}`);
       closeModal("assignPackageModal");
       renderPackagesView();
+      if (typeof renderFinancialReports === "function") renderFinancialReports();
+      if (typeof renderDashboard === "function") renderDashboard();
+      if (typeof currentActiveProfilePatientId !== "undefined" && currentActiveProfilePatientId) {
+        viewPatientProfile(currentActiveProfilePatientId);
+      }
     }
 
     function archivePatientPackage(id) {
@@ -7328,6 +8050,25 @@ service cloud.firestore {
       }
 
       closeModal("packageTemplateModal");
+      renderPackagesView();
+    }
+
+    function deletePackageTemplate(templateId) {
+      const templates = getStoredData(STORAGE_KEYS.packages, []);
+      const t = templates.find(item => item.id === templateId);
+      const name = t ? t.name : templateId;
+
+      if (!confirm(`Are you sure you want to permanently delete package template "${name}"?`)) {
+        return;
+      }
+
+      const updated = templates.filter(item => item.id !== templateId);
+      setStoredData(STORAGE_KEYS.packages, updated);
+      if (typeof SyncEngine !== "undefined" && SyncEngine.notifyDelete) {
+        SyncEngine.notifyDelete("packages", templateId);
+      }
+
+      showToast(`Package template ${name} removed`);
       renderPackagesView();
     }
 
@@ -7464,12 +8205,20 @@ service cloud.firestore {
     function handleReportPeriodChange() {
       const mode = document.getElementById("reportPeriodSelect").value;
       const customDates = document.getElementById("reportCustomDates");
+      const today = getTodayYMD();
+
       if (mode === 'custom') {
         customDates.style.display = "flex";
+        if (!document.getElementById("reportStartDate").value) {
+          const now = new Date();
+          const firstDay = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+          document.getElementById("reportStartDate").value = firstDay;
+          document.getElementById("reportEndDate").value = today;
+        }
       } else {
         customDates.style.display = "none";
-        generateReports();
       }
+      generateReports();
     }
 
     function generateReports() {
@@ -7481,26 +8230,45 @@ service cloud.firestore {
       const now = new Date();
       if (mode === 'today') {
         startDate = today;
+        endDate = today;
       } else if (mode === 'this_week') {
         const dayOfWeek = now.getDay();
         const start = new Date(now);
         start.setDate(now.getDate() - dayOfWeek);
-        startDate = start.toISOString().split('T')[0];
+        const y = start.getFullYear();
+        const m = String(start.getMonth() + 1).padStart(2, '0');
+        const d = String(start.getDate()).padStart(2, '0');
+        startDate = `${y}-${m}-${d}`;
+        endDate = today;
       } else if (mode === 'this_month') {
         startDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+        endDate = today;
       } else if (mode === 'last_month') {
-        const lm = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        startDate = `${lm.getFullYear()}-${String(lm.getMonth() + 1).padStart(2, '0')}-01`;
+        const lmStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        startDate = `${lmStart.getFullYear()}-${String(lmStart.getMonth() + 1).padStart(2, '0')}-01`;
         const lmEnd = new Date(now.getFullYear(), now.getMonth(), 0);
         endDate = `${lmEnd.getFullYear()}-${String(lmEnd.getMonth() + 1).padStart(2, '0')}-${String(lmEnd.getDate()).padStart(2, '0')}`;
+      } else if (mode === 'all_time') {
+        startDate = "";
+        endDate = "";
       } else if (mode === 'custom') {
-        startDate = document.getElementById("reportStartDate").value;
-        endDate = document.getElementById("reportEndDate").value;
+        startDate = document.getElementById("reportStartDate")?.value || "";
+        endDate = document.getElementById("reportEndDate")?.value || today;
       }
 
       const invoices = getStoredData(STORAGE_KEYS.invoices, []);
       const expenses = getStoredData(STORAGE_KEYS.expenses, []);
       const appointments = getStoredData(STORAGE_KEYS.appointments, []);
+      const patients = getStoredData(STORAGE_KEYS.patients, []);
+
+      // Build patient map for doctor attribution
+      const patientDoctorMap = {};
+      patients.forEach(p => {
+        if (p.id) {
+          const doc = (p.assignedDoctor === "Dr Subaib") ? "Dr Suhaib" : (p.assignedDoctor || "Dr Suhaib");
+          patientDoctorMap[p.id] = doc;
+        }
+      });
 
       let totalInvoiced = 0;
       let totalCollected = 0;
@@ -7508,16 +8276,30 @@ service cloud.firestore {
       let paymentCount = 0;
       let outstandingInvoices = [];
 
+      // Doctor-wise stats accumulator
+      const docStats = {
+        "Dr Suhaib": { sessions: 0, revenue: 0 },
+        "Dr Anand": { sessions: 0, revenue: 0 }
+      };
+
       invoices.forEach(inv => {
-        const inRange = (!startDate || inv.date >= startDate) && (!endDate || inv.date <= endDate);
+        const invDate = inv.date || "";
+        const inRange = (!startDate || invDate >= startDate) && (!endDate || invDate <= endDate);
         if (inRange) {
           totalInvoiced += (Number(inv.total) || 0);
           invoiceCount++;
+
+          // Attribute invoiced revenue to doctor
+          const assignedDoc = patientDoctorMap[inv.patientId] || "Dr Suhaib";
+          if (docStats[assignedDoc]) {
+            docStats[assignedDoc].revenue += (Number(inv.total) || 0);
+          }
         }
 
-        // Payments can have independent dates
+        // Payments can occur on independent dates
         (inv.payments || []).forEach(p => {
-          const pInRange = (!startDate || p.date >= startDate) && (!endDate || p.date <= endDate);
+          const pDate = p.date || invDate;
+          const pInRange = (!startDate || pDate >= startDate) && (!endDate || pDate <= endDate);
           if (pInRange) {
             totalCollected += (Number(p.amount) || 0);
             paymentCount++;
@@ -7533,7 +8315,8 @@ service cloud.firestore {
       let totalExpenses = 0;
       let expenseCount = 0;
       expenses.forEach(e => {
-        const inRange = (!startDate || e.date >= startDate) && (!endDate || e.date <= endDate);
+        const expDate = e.date || "";
+        const inRange = (!startDate || expDate >= startDate) && (!endDate || expDate <= endDate);
         if (inRange) {
           totalExpenses += (Number(e.amount) || 0);
           expenseCount++;
@@ -7550,42 +8333,52 @@ service cloud.firestore {
       document.getElementById("repExpenseCount").textContent = `${expenseCount} expense entries`;
       document.getElementById("repNetCash").textContent = formatINR(netCash);
 
-      // Doctor Wise Breakdown
-      const docStats = {
-        "Dr Suhaib": { sessions: 0, revenue: 0 },
-        "Dr Anand": { sessions: 0, revenue: 0 }
-      };
-
+      // Count appointments in date range
       appointments.forEach(a => {
-        const inRange = (!startDate || a.date >= startDate) && (!endDate || a.date <= endDate);
+        const aDate = a.date || "";
+        const inRange = (!startDate || aDate >= startDate) && (!endDate || aDate <= endDate);
         const docKey = (a.doctor === "Dr Subaib") ? "Dr Suhaib" : a.doctor;
         if (inRange && docStats[docKey]) {
           docStats[docKey].sessions++;
         }
       });
 
+      // Render Doctor Revenue & Performance Table
       const docTbody = document.getElementById("repDoctorRevenueBody");
       docTbody.innerHTML = Object.keys(docStats).map(doc => `
         <tr>
-          <td><strong>${doc}</strong></td>
-          <td>${docStats[doc].sessions} sessions conducted</td>
-          <td>-</td>
+          <td><strong style="color:var(--text-main); font-size:13.5px;">${doc}</strong></td>
+          <td><strong style="color:var(--primary);">${docStats[doc].sessions}</strong> sessions conducted</td>
+          <td style="font-weight:700; color:var(--success);">${formatINR(docStats[doc].revenue)}</td>
+          <td style="text-align:right;">
+            <button class="btn btn-sm btn-secondary" onclick="filterAptsForDoctor('${doc}')">View Roster</button>
+          </td>
         </tr>
       `).join('');
 
-      // Outstanding Invoices Table
+      // Render Outstanding Invoices Table with interactive View & Record Pay actions
       const outTbody = document.getElementById("repOutstandingInvoicesBody");
       if (outstandingInvoices.length === 0) {
-        outTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999; padding:12px;">No pending invoices</td></tr>`;
+        outTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#999; padding:16px;">All invoices in this period are settled</td></tr>`;
       } else {
-        outTbody.innerHTML = outstandingInvoices.slice(0, 5).map(inv => `
-          <tr>
-            <td><strong>${escapeHTML(inv.number)}</strong></td>
-            <td>${escapeHTML(inv.patientName)}</td>
-            <td>${formatDateDisplay(inv.dueDate)}</td>
-            <td style="color:var(--danger); font-weight:700;">${formatINR(calculateInvoiceBalance(inv))}</td>
-          </tr>
-        `).join('');
+        outTbody.innerHTML = outstandingInvoices.slice(0, 10).map(inv => {
+          const bal = calculateInvoiceBalance(inv);
+          return `
+            <tr>
+              <td><strong style="color:var(--primary); cursor:pointer;" onclick="viewPrintInvoice('${inv.id}')">${escapeHTML(inv.number)}</strong></td>
+              <td>${escapeHTML(inv.patientName)}</td>
+              <td>${formatDateDisplay(inv.dueDate)}</td>
+              <td style="color:var(--danger); font-weight:700;">${formatINR(bal)}</td>
+              <td style="text-align:right;">
+                <div style="display:inline-flex; gap:6px;">
+                  <button class="btn btn-sm btn-secondary" onclick="viewPrintInvoice('${inv.id}')">View</button>
+                  <button class="btn btn-sm btn-success" onclick="quickSettleInvoice('${inv.id}')" title="Instantly record full settlement">⚡ Settle</button>
+                  <button class="btn btn-sm btn-secondary" onclick="openRecordPaymentModal('${inv.id}')">Record Pay</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
       }
     }
 
@@ -7866,16 +8659,57 @@ service cloud.firestore {
 
     function openResetConfirmModal() {
       document.getElementById("resetConfirmInput").value = "";
+      const cloudCb = document.getElementById("resetFirebaseCloudCheckbox");
+      if (cloudCb) cloudCb.checked = true;
+      const btnReset = document.getElementById("btnExecuteReset");
+      if (btnReset) {
+        btnReset.disabled = false;
+        btnReset.textContent = "Erase All Data & Reset";
+      }
       openModal("resetConfirmModal");
     }
 
-    function executeDatabaseReset() {
+    async function executeDatabaseReset() {
       const confirmation = document.getElementById("resetConfirmInput").value.trim();
       if (confirmation !== "RESET") {
         alert("Please type RESET exactly to confirm erasure.");
         return;
       }
 
+      const wipeCloud = document.getElementById("resetFirebaseCloudCheckbox")?.checked ?? true;
+      const btnReset = document.getElementById("btnExecuteReset");
+      if (btnReset) {
+        btnReset.disabled = true;
+        btnReset.textContent = "Wiping Data...";
+      }
+
+      // If Cloud reset requested and Firebase is available
+      if (wipeCloud && window.FRL_FIREBASE && window.FRL_FIREBASE.clearCollection) {
+        try {
+          showToast("Wiping Cloud Firestore collections...", "info");
+          SyncEngine.updateUI("Syncing...", "Clearing Cloud Firestore database collections...");
+          
+          // Clear active listeners first to avoid receiving deletions as snapshot events
+          if (window.FRL_FIREBASE.unsubscribeAll) {
+            window.FRL_FIREBASE.unsubscribeAll();
+          }
+
+          const collections = ['patients', 'appointments', 'invoices', 'expenses', 'patientPackages', 'packages', 'counters'];
+          for (const col of collections) {
+            try {
+              await window.FRL_FIREBASE.clearCollection(col);
+            } catch (colErr) {
+              console.warn(`[FRL Reset] Notice clearing cloud ${col}:`, colErr.message);
+            }
+          }
+          console.log("[FRL Reset] Cloud collections wiped successfully.");
+        } catch (cloudErr) {
+          console.error("[FRL Reset] Error resetting cloud database:", cloudErr);
+          showToast("Notice: Local wiped, but cloud clear had warning: " + cloudErr.message, "warning");
+        }
+      }
+
+      // Clear all local database keys
       localStorage.removeItem(STORAGE_KEYS.patients);
       localStorage.removeItem(STORAGE_KEYS.appointments);
       localStorage.removeItem(STORAGE_KEYS.invoices);
@@ -7883,12 +8717,15 @@ service cloud.firestore {
       localStorage.removeItem(STORAGE_KEYS.patientPackages);
       localStorage.removeItem(STORAGE_KEYS.expenses);
       localStorage.removeItem(STORAGE_KEYS.counters);
+      localStorage.removeItem(STORAGE_KEYS.syncQueue);
+      localStorage.removeItem(STORAGE_KEYS.syncMeta);
 
       closeModal("resetConfirmModal");
-      showToast("Application database cleared", "danger");
+      showToast("Complete application & cloud reset executed successfully!", "danger");
+      
       setTimeout(() => {
         window.location.reload();
-      }, 500);
+      }, 700);
     }
 
     // ================= 11. CSV EXPORTS =================
@@ -7954,24 +8791,85 @@ service cloud.firestore {
     }
 
     function exportFinancialReportCSV() {
+      const mode = document.getElementById("reportPeriodSelect")?.value || 'this_month';
+      const today = getTodayYMD();
+      let startDate = "";
+      let endDate = today;
+
+      const now = new Date();
+      if (mode === 'today') {
+        startDate = today;
+        endDate = today;
+      } else if (mode === 'this_week') {
+        const dayOfWeek = now.getDay();
+        const start = new Date(now);
+        start.setDate(now.getDate() - dayOfWeek);
+        const y = start.getFullYear();
+        const m = String(start.getMonth() + 1).padStart(2, '0');
+        const d = String(start.getDate()).padStart(2, '0');
+        startDate = `${y}-${m}-${d}`;
+        endDate = today;
+      } else if (mode === 'this_month') {
+        startDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+        endDate = today;
+      } else if (mode === 'last_month') {
+        const lmStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        startDate = `${lmStart.getFullYear()}-${String(lmStart.getMonth() + 1).padStart(2, '0')}-01`;
+        const lmEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+        endDate = `${lmEnd.getFullYear()}-${String(lmEnd.getMonth() + 1).padStart(2, '0')}-${String(lmEnd.getDate()).padStart(2, '0')}`;
+      } else if (mode === 'all_time') {
+        startDate = "";
+        endDate = "";
+      } else if (mode === 'custom') {
+        startDate = document.getElementById("reportStartDate")?.value || "";
+        endDate = document.getElementById("reportEndDate")?.value || today;
+      }
+
       const invoices = getStoredData(STORAGE_KEYS.invoices, []);
       const expenses = getStoredData(STORAGE_KEYS.expenses, []);
-      let totalInvoiced = invoices.reduce((s, i) => s + (Number(i.total) || 0), 0);
-      let totalPaid = invoices.reduce((s, i) => s + (Number(i.paid) || 0), 0);
-      let totalExpenses = expenses.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+
+      let totalInvoiced = 0;
+      let totalPaid = 0;
+      let invoiceCount = 0;
+
+      invoices.forEach(i => {
+        const iDate = i.date || "";
+        if ((!startDate || iDate >= startDate) && (!endDate || iDate <= endDate)) {
+          totalInvoiced += (Number(i.total) || 0);
+          invoiceCount++;
+        }
+        (i.payments || []).forEach(p => {
+          const pDate = p.date || iDate;
+          if ((!startDate || pDate >= startDate) && (!endDate || pDate <= endDate)) {
+            totalPaid += (Number(p.amount) || 0);
+          }
+        });
+      });
+
+      let totalExpenses = 0;
+      let expenseCount = 0;
+      expenses.forEach(e => {
+        const eDate = e.date || "";
+        if ((!startDate || eDate >= startDate) && (!endDate || eDate <= endDate)) {
+          totalExpenses += (Number(e.amount) || 0);
+          expenseCount++;
+        }
+      });
+
       let netCash = totalPaid - totalExpenses;
 
       const lines = [
         "Functional Rehab Lab - Financial Summary Report",
-        `Generated on,${new Date().toLocaleString('en-IN')}`,
+        `Selected Period,${mode} (${startDate || 'Beginning'} to ${endDate || 'Latest'})`,
+        `Generated On,${new Date().toLocaleString('en-IN')}`,
         "",
-        "Metric,Amount (INR)",
-        `Total Invoiced,${totalInvoiced}`,
-        `Total Collections,${totalPaid}`,
-        `Total Recorded Expenses,${totalExpenses}`,
-        `Net Cash Estimate,${netCash}`
+        "Metric,Amount (INR),Count",
+        `Total Invoiced,${totalInvoiced},${invoiceCount} invoices`,
+        `Total Real Collections,${totalPaid},Payment receipts`,
+        `Total Recorded Expenses,${totalExpenses},${expenseCount} expense entries`,
+        `Net Cash Balance,${netCash},`
       ];
-      downloadCSV(lines.join("\n"), `Financial_Report_${getTodayYMD()}.csv`);
+      downloadCSV(lines.join("\n"), `Financial_Report_${mode}_${getTodayYMD()}.csv`);
     }
 
     // ================= 12. UTILITIES & INITIALIZATION =================
